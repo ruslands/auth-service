@@ -1,0 +1,6 @@
+site_name: auth
+site_url: https://development.rivehomes.com/auth/mkdocs
+nav:
+    - Home: index.md
+    - About: about.md
+theme: readthedocs

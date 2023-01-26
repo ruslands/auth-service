@@ -1,0 +1,11 @@
+loguru
+boto3
+pydantic
+fastapi
+httpx
+cryptography
+PyJWT
+bcrypt
+passlib
+requests
+sentry-sdk[fastapi]

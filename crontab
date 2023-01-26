@@ -1,0 +1,1 @@
+* * 12 * * /usr/local/bin/python3 /jobs/syncWorkspace.py  >> /var/log/cron.log 2>&1

@@ -1,0 +1,43 @@
+# FYI: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+
+version=0.1
+
+
+[development]
+[development.deploy]
+[development.deploy.parameters]
+capabilities = 'CAPABILITY_IAM'
+confirm_changeset = true
+region = 'eu-central-1'
+resolve_image_repos = true
+stack_name = 'kodit-auth-development'
+disable_rollback = true
+debug = true
+resolve_s3 = true
+parameter_overrides = 'Environment=development'
+
+
+[staging]
+[staging.deploy]
+[staging.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+region = "eu-central-1"
+resolve_image_repos = true
+stack_name = "kodit-auth-staging"
+disable_rollback = true
+debug = true
+parameter_overrides = "Environment=staging"
+
+
+[production]
+[production.deploy]
+[production.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+region = "eu-central-1"
+resolve_image_repos = true
+stack_name = "kodit-auth-production"
+disable_rollback = true
+debug = true
+parameter_overrides = "Environment=production"
