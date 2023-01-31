@@ -6,7 +6,7 @@ from pydantic.generics import GenericModel
 from pydantic import BaseModel
 
 # # Package # #
-from app.schemas.role import IRoleRead
+from app.schemas.role import IRead
 
 __all__ = (
     "IGetResponseBase",
@@ -42,4 +42,4 @@ class IDeleteResponseBase(IResponseBase[DataType], Generic[DataType]):
 
 
 class IMetaGeneral(BaseModel):
-    roles: List[IRoleRead]
+    roles: List[IRead]

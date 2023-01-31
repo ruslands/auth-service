@@ -8,21 +8,21 @@ from app.models.permission import PermissionBase
 
 
 __all__ = (
-    "IPermissionCreate",
-    "IPermissionRead",
-    "IPermissionUpdate",
+    "ICreate",
+    "IRead",
+    "IUpdate",
 )
 
 
-class IPermissionCreate(PermissionBase):
+class ICreate(PermissionBase):
     role_id: UUID
     resource_id: UUID
 
 
-class IPermissionRead(PermissionBase):
+class IRead(PermissionBase):
     role_id: UUID
     resource_id: UUID
 
 
-class IPermissionUpdate(PermissionBase):
+class IUpdate(PermissionBase):
     pass

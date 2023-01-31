@@ -2,7 +2,7 @@
 name = ""
 version = "0.1.0"
 description = ""
-authors = ["Ruslan Konovalov <ruslan.konovalov@kodit.io>"]
+authors = ["Ruslan Konovalov <konovalov.rus@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"

@@ -16,7 +16,7 @@ from app.schemas.common import (
     IPostResponseBase,
     IPutResponseBase,
 )
-from app.schemas.team import ITeamCreate, ITeamRead, ITeamReadWithUsers, ITeamUpdate
+from app.schemas.team import ICreate, IRead, IReadWithUsers, IUpdate
 from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
@@ -24,18 +24,18 @@ from app.database.session import get_session
 router = APIRouter()
 
 
-@router.get("/team/list", response_model=IGetResponseBase[Page[ITeamRead]])
-async def get_teams_list(
+@router.get("/team/list", response_model=IGetResponseBase[Page[IRead]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
 ):
     teams = await crud.team.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[ITeamRead]](data=teams)
+    return IGetResponseBase[Page[IRead]](data=teams)
 
 
-@router.get("/team/{team_id}", response_model=IGetResponseBase[ITeamReadWithUsers])
-async def get_team_by_id(
+@router.get("/team/{team_id}", response_model=IGetResponseBase[IReadWithUsers])
+async def get(
     team_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
@@ -43,25 +43,28 @@ async def get_team_by_id(
     team = await crud.team.get(db_session, id=team_id)
     if not team:
         raise NotFoundException
-    return IGetResponseBase[ITeamReadWithUsers](data=team)
+    return IGetResponseBase[IReadWithUsers](data=team)
 
 
-@router.post("/team", response_model=IPostResponseBase[ITeamRead])
-async def create_team(
-    team: ITeamCreate,
+@router.post("/team", response_model=IPostResponseBase[IRead])
+async def create(
+    team: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
-    if await crud.team.get_team_by_name(db_session, name=team.name):
-        raise AlreadyExistsException
-    team = await crud.team.create(db_session, obj_in=team, created_by=current_user.id)
-    return IPostResponseBase[ITeamRead](data=team)
+    try:
+        team = await crud.team.create(db_session, obj_in=team, created_by=current_user.id)
+    except sqlalchemy.exc.IntegrityError as e:
+        if "UniqueViolationError" in str(e):
+            raise AlreadyExistsException
+        raise BadRequestException(detail=f"Team creation failed: {e}")
+    return IPostResponseBase[IRead](data=team)
 
 
-@router.patch("/team/{team_id}", response_model=IPostResponseBase[ITeamRead])
-async def update_team(
+@router.patch("/team/{team_id}", response_model=IPostResponseBase[IRead])
+async def update(
     team_id: UUID,
-    team: ITeamUpdate,
+    team: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
@@ -77,11 +80,11 @@ async def update_team(
         )
     except sqlalchemy.exc.IntegrityError as e:
         raise BadRequestException(detail=f"Team update failed: {e}")
-    return IPutResponseBase[ITeamRead](data=team_updated)
+    return IPutResponseBase[IRead](data=team_updated)
 
 
-@router.delete("/team/{team_id}", response_model=IDeleteResponseBase[ITeamRead])
-async def remove_team(
+@router.delete("/team/{team_id}", response_model=IDeleteResponseBase[IRead])
+async def delete(
     team_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
@@ -91,4 +94,4 @@ async def remove_team(
     if not current_team:
         raise NotFoundException
     team = await crud.team.remove(db_session, id=team_id)
-    return IDeleteResponseBase[ITeamRead](data=team)
+    return IDeleteResponseBase[IRead](data=team)

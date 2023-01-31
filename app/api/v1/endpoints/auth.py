@@ -22,7 +22,7 @@ from app.utils.exceptions import ConflictException, NotFoundException, Unauthori
 from app.utils.constants import AMOUNT_OF_SESSSIONS_PER_USER
 from app.schemas.token import Token, RefreshToken
 from app.schemas.common import IPostResponseBase, IGetResponseBase
-from app.schemas.user import IUserCreate
+from app.schemas.user import ICreate
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app.models.sessions import Sessions
@@ -194,7 +194,7 @@ async def google_callback(
     except SQLAlchemyError as e:
         raise ConflictException(detail=f"database error: {e.orig}")
     if not user:
-        new_user = IUserCreate.parse_obj(google_user.dict())
+        new_user = ICreate.parse_obj(google_user.dict())
         logger.debug(f"user not found, creating new user: {new_user}")
         user = await crud.user.create(db_session, obj_in=new_user)
         user = await crud.user.get_by_email(db_session, email=user.email)

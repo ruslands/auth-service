@@ -10,11 +10,11 @@ from app.models.team import TeamBase
 from app.models.base_uuid_model import BaseUUIDModel
 
 
-class ITeamRead(TeamBase, BaseUUIDModel):
+class IRead(TeamBase, BaseUUIDModel):
     ...
 
 
-class ITeamCreate(BaseModel):
+class ICreate(BaseModel):
     name: str
 
     @validator('name')
@@ -22,9 +22,9 @@ class ITeamCreate(BaseModel):
         return v.lower().strip().strip('/')
 
 
-class ITeamUpdate(TeamBase, BaseUUIDModel):
+class IUpdate(TeamBase, BaseUUIDModel):
     ...
 
 
-class ITeamReadWithUsers(ITeamRead):
+class IReadWithUsers(IRead):
     users: List[UserBase]

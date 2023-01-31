@@ -27,14 +27,14 @@ reusable_oauth2 = OAuth2PasswordBearer(
 )
 
 
-@router.get("/visibility_group/list", response_model=IGetResponseBase[Page[IVisibilityGroupRead]])
-async def get_visibility_group_list(
+@router.get("/visibility_group/list", response_model=IGetResponseBase[Page[IRead]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
 ):
     visibility_groups = await crud.visibility_group.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[IVisibilityGroupRead]](data=visibility_groups)
+    return IGetResponseBase[Page[IRead]](data=visibility_groups)
 
 
 # TODO: add response model
@@ -72,8 +72,8 @@ async def validate(
     return IGetResponseBase[IVisibilityGroupValidateResponse](meta=meta, data=data)
 
 
-@ router.get("/visibility_group/{visibility_group_id}", response_model=IGetResponseBase[IVisibilityGroupRead])
-async def get_visibility_group_by_id(
+@ router.get("/visibility_group/{visibility_group_id}", response_model=IGetResponseBase[IRead])
+async def get(
     visibility_group_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
@@ -81,25 +81,25 @@ async def get_visibility_group_by_id(
     visibility_group = await crud.visibility_group.get(db_session, id=visibility_group_id)
     if not visibility_group:
         raise NotFoundException
-    return IGetResponseBase[IVisibilityGroupRead](data=visibility_group)
+    return IGetResponseBase[IRead](data=visibility_group)
 
 
-@ router.post("/visibility_group", response_model=IPostResponseBase[IVisibilityGroupRead])
-async def create_visibility_group(
-    visibility_group: IVisibilityGroupCreate,
+@ router.post("/visibility_group", response_model=IPostResponseBase[IRead])
+async def create(
+    visibility_group: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
     if await crud.visibility_group.get_visibility_group_by_prefix(db_session, prefix=visibility_group.prefix):
         raise AlreadyExistsException
     visibility_group = await crud.visibility_group.create(db_session, obj_in=visibility_group, created_by=current_user.id)
-    return IPostResponseBase[IVisibilityGroupRead](data=visibility_group)
+    return IPostResponseBase[IRead](data=visibility_group)
 
 
-@ router.patch("/visibility_group/{visibility_group_id}", response_model=IPostResponseBase[IVisibilityGroupRead])
-async def update_visibility_group(
+@ router.patch("/visibility_group/{visibility_group_id}", response_model=IPostResponseBase[IRead])
+async def update(
     visibility_group_id: UUID,
-    visibility_group: IVisibilityGroupUpdate,
+    visibility_group: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
@@ -115,11 +115,11 @@ async def update_visibility_group(
         )
     except sqlalchemy.exc.IntegrityError as e:
         raise BadRequestException(detail=f"Visibility group update failed: {e}")
-    return IPutResponseBase[IVisibilityGroupRead](data=visibility_group_updated)
+    return IPutResponseBase[IRead](data=visibility_group_updated)
 
 
-@router.delete("/visibility_group/{visibility_group_id}", response_model=IDeleteResponseBase[IVisibilityGroupRead])
-async def remove_visibility_group(
+@router.delete("/visibility_group/{visibility_group_id}", response_model=IDeleteResponseBase[IRead])
+async def delete(
     visibility_group_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
@@ -129,4 +129,4 @@ async def remove_visibility_group(
     if not current_visibility_group:
         raise NotFoundException
     visibility_group = await crud.visibility_group.remove(db_session, id=visibility_group_id)
-    return IDeleteResponseBase[IVisibilityGroupRead](data=visibility_group)
+    return IDeleteResponseBase[IRead](data=visibility_group)

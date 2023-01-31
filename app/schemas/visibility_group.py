@@ -12,19 +12,19 @@ from app.models.base_uuid_model import BaseUUIDModel
 from app.utils.constants import VISIBILITY_GROUP_ENTITY_SETTINGS
 
 __all__ = (
-    "IVisibilityGroupCreate",
-    "IVisibilityGroupRead",
-    "IVisibilityGroupUpdate",
+    "ICreate",
+    "IRead",
+    "IUpdate",
     "IVisibilityGroupSettings",
     "IVisibilityGroupValidateResponse"
 )
 
 
-class IVisibilityGroupRead(VisibilityGroupBase, BaseUUIDModel):
+class IRead(VisibilityGroupBase, BaseUUIDModel):
     ...
 
 
-class IVisibilityGroupCreate(BaseModel):
+class ICreate(BaseModel):
     prefix: str
     admin: Optional[UUID]
     opportunity: Optional[List[str]] = []
@@ -46,7 +46,7 @@ class IVisibilityGroupCreate(BaseModel):
         return v
 
 
-class IVisibilityGroupUpdate(VisibilityGroupBase, BaseUUIDModel):
+class IUpdate(VisibilityGroupBase, BaseUUIDModel):
     prefix: Optional[str]
     admin: Optional[UUID]
     opportunity: Optional[List[str]]

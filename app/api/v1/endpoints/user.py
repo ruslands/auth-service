@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends
 from app.utils.settings import Params, Page
 from app.utils.logger import logger
 from app.utils.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
-from app.schemas.user import IUserCreate, IUserRead, IUserUpdate, IUserReadTemporary, IUserFilter
+from app.schemas.user import ICreate, IRead, IUpdate, IReadTemporary, IUserFilter
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app import crud
@@ -35,7 +35,7 @@ async def user_filters(filters: Union[str, None] = None) -> Dict[str, Any]:
 
 
 async def user_scope(scope: Union[str, None] = None) -> List[str]:
-    possible_values = list(IUserReadTemporary.schema()['properties'].keys())
+    possible_values = list(IReadTemporary.schema()['properties'].keys())
     try:
         if scope is None:
             return {}
@@ -49,8 +49,8 @@ async def user_scope(scope: Union[str, None] = None) -> List[str]:
             detail=f"Invalid scope. Possible values are: {possible_values}")
 
 
-@router.get("/user/list", response_model=IGetResponseBase[Page[IUserReadTemporary]])
-async def read_users_list(
+@router.get("/user/list", response_model=IGetResponseBase[Page[IReadTemporary]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
@@ -68,13 +68,22 @@ async def read_users_list(
             query = query.where(getattr(User, key) == value)
     users = await crud.user.get_multi_paginated(db_session, params=params, query=query)
     # TODO: fix this. create new class from factory
-    IUserReadTemporary.__exclude_fields_custom__ = exclude
-    return IGetResponseBase[Page[IUserReadTemporary]](data=users)
+    IReadTemporary.__exclude_fields_custom__ = exclude
+    return IGetResponseBase[Page[IReadTemporary]](data=users)
 
 
-@router.post("/user", response_model=IPostResponseBase[IUserReadTemporary])
-async def create_user(
-    new_user: IUserCreate,
+@router.get("/user/{user_id}", response_model=IGetResponseBase[IRead])
+async def get(
+    user_id: UUID,
+    db_session: AsyncSession = Depends(get_session),
+):
+    user = await crud.user.get(db_session, id=user_id)
+    return IGetResponseBase[IRead](data=user)
+
+
+@router.post("/user", response_model=IPostResponseBase[IReadTemporary])
+async def create(
+    new_user: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
@@ -84,13 +93,13 @@ async def create_user(
     # TODO assign default roles to user
     user = await crud.user.create(db_session, obj_in=new_user)
     # TODO send email to user with password
-    return IPostResponseBase[IUserReadTemporary](data=user)
+    return IPostResponseBase[IReadTemporary](data=user)
 
 
-@router.patch("/user/{user_id}", response_model=IPutResponseBase[IUserReadTemporary])
-async def update_user(
+@router.patch("/user/{user_id}", response_model=IPutResponseBase[IReadTemporary])
+async def update(
     user_id: UUID,
-    new_user: IUserUpdate,
+    new_user: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
 ):
@@ -100,10 +109,10 @@ async def update_user(
     user_updated = await crud.user.update(
         db_session=db_session, obj_current=user, obj_new=new_user
     )
-    return IPutResponseBase[IUserReadTemporary](data=user_updated)
+    return IPutResponseBase[IReadTemporary](data=user_updated)
 
 
-@router.patch("/user/{user_id}/role/{role_id}", response_model=IPutResponseBase[IUserRead])
+@router.patch("/user/{user_id}/role/{role_id}", response_model=IPutResponseBase[IRead])
 async def update_user_role(
     role_id: UUID,
     user_id: UUID,
@@ -114,10 +123,10 @@ async def update_user_role(
     await crud.user.update_role(db_session, id=user_id, role=role)
     # TODO remove abundant database call
     user = await crud.user.get(db_session, id=user_id)
-    return IPutResponseBase[IUserRead](data=user)
+    return IPutResponseBase[IRead](data=user)
 
 
-@router.patch("/user/{user_id}/team/{team_id}", response_model=IPutResponseBase[IUserRead])
+@router.patch("/user/{user_id}/team/{team_id}", response_model=IPutResponseBase[IRead])
 async def update_user_team(
     team_id: UUID,
     user_id: UUID,
@@ -128,10 +137,10 @@ async def update_user_team(
     await crud.user.update_team(db_session, id=user_id, team=team)
     # TODO remove abundant database call
     user = await crud.user.get(db_session, id=user_id)
-    return IPutResponseBase[IUserRead](data=user)
+    return IPutResponseBase[IRead](data=user)
 
 
-@router.patch("/user/{user_id}/visibility_group/{visibility_group_id}", response_model=IPutResponseBase[IUserRead])
+@router.patch("/user/{user_id}/visibility_group/{visibility_group_id}", response_model=IPutResponseBase[IRead])
 async def update_user_visibility_group(
     visibility_group_id: UUID,
     user_id: UUID,
@@ -142,20 +151,11 @@ async def update_user_visibility_group(
     await crud.user.update_visibility_group(db_session, id=user_id, visibility_group=visibility_group)
     # TODO remove abundant database call
     user = await crud.user.get(db_session, id=user_id)
-    return IPutResponseBase[IUserRead](data=user)
+    return IPutResponseBase[IRead](data=user)
 
 
-@router.get("/user/{user_id}", response_model=IGetResponseBase[IUserRead])
-async def get_user_by_id(
-    user_id: UUID,
-    db_session: AsyncSession = Depends(get_session),
-):
-    user = await crud.user.get(db_session, id=user_id)
-    return IGetResponseBase[IUserRead](data=user)
-
-
-@router.delete("/user/{user_id}", response_model=IDeleteResponseBase[IUserRead])
-async def delete_user(
+@router.delete("/user/{user_id}", response_model=IDeleteResponseBase[IRead])
+async def delete(
     user_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
@@ -167,16 +167,16 @@ async def delete_user(
     if not user:
         raise NotFoundException
     user = await crud.user.remove(db_session, id=user_id)
-    return IDeleteResponseBase[IUserRead](
+    return IDeleteResponseBase[IRead](
         data=user
     )
 
 
-@router.get("/user", response_model=IGetResponseBase[IUserRead])
+@router.get("/user", response_model=IGetResponseBase[IRead])
 async def get_my_data(
     current_user: User = Depends(get_current_user()),
 ):
     # TODO: assign applications to user based on region or role
     # TODO: not to return sensitive data
     current_user.applications = ['delorean', 'cms', 'crme', 'kops', 'jorge/inbound', 'jorge']
-    return IGetResponseBase[IUserRead](data=current_user)
+    return IGetResponseBase[IRead](data=current_user)

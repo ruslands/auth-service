@@ -14,7 +14,7 @@ from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app.models.user import User
-from app.schemas.role import IRoleCreate, IRoleRead, IRoleUpdate, IRoleReadWithPermissions
+from app.schemas.role import ICreate, IRead, IUpdate, IReadWithPermissions
 from app.schemas.common import (
     IGetResponseBase,
     IPostResponseBase,
@@ -25,43 +25,46 @@ from app.schemas.common import (
 router = APIRouter()
 
 
-@router.get("/role/list", response_model=IGetResponseBase[Page[IRoleRead]])
-async def get_roles(
+@router.get("/role/list", response_model=IGetResponseBase[Page[IRead]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
 ):
     roles = await crud.role.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[IRoleRead]](data=roles)
+    return IGetResponseBase[Page[IRead]](data=roles)
 
 
-@router.get("/role/{role_id}", response_model=IGetResponseBase[IRoleReadWithPermissions])
-async def get_role_by_id(
+@router.get("/role/{role_id}", response_model=IGetResponseBase[IReadWithPermissions])
+async def get(
     role_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
 ):
     role = await crud.role.get(db_session, id=role_id)
     logger.debug(role)
-    return IGetResponseBase[IRoleReadWithPermissions](data=role)
+    return IGetResponseBase[IReadWithPermissions](data=role)
 
 
-@router.post("/role", response_model=IPostResponseBase[IRoleRead])
-async def create_role(
-    new_role: IRoleCreate,
+@router.post("/role", response_model=IPostResponseBase[IRead])
+async def create(
+    role: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
-    if await crud.role.get_role_by_name(db_session, name=new_role.name):
-        raise AlreadyExistsException
-    new_role = await crud.role.create(db_session, obj_in=new_role)
-    return IPostResponseBase[IRoleRead](data=new_role)
+    try:
+        role = await crud.role.create(db_session, obj_in=role)
+    except sqlalchemy.exc.IntegrityError as e:
+        if "UniqueViolationError" in str(e):
+            raise AlreadyExistsException
+        raise BadRequestException(detail=f"Role creation failed: {e}")
+    return IPostResponseBase[IRead](data=role)
 
 
-@router.patch("/role/{role_id}", response_model=IPutResponseBase[IRoleRead])
-async def update_role(
+@router.patch("/role/{role_id}", response_model=IPutResponseBase[IRead])
+async def update(
     role_id: UUID,
-    role: IRoleUpdate,
+    role: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
@@ -73,11 +76,11 @@ async def update_role(
         updated_role = await crud.role.update(db_session, obj_current=current_role, obj_new=role)
     except sqlalchemy.exc.IntegrityError as e:
         raise BadRequestException(detail=f"Role update failed: {e}")
-    return IPutResponseBase[IRoleRead](data=updated_role)
+    return IPutResponseBase[IRead](data=updated_role)
 
 
-@router.delete("/role/{role_id}", response_model=IGetResponseBase[IRoleRead])
-async def delete_role_by_id(
+@router.delete("/role/{role_id}", response_model=IGetResponseBase[IRead])
+async def delete(
     role_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
@@ -86,6 +89,6 @@ async def delete_role_by_id(
     if not role:
         raise NotFoundException
     role = await crud.role.remove(db_session, id=role_id)
-    return IDeleteResponseBase[IRoleRead](
+    return IDeleteResponseBase[IRead](
         data=role
     )

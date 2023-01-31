@@ -5,13 +5,13 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 
 # # Package # #
-from app.schemas.sessions import ISessionsCreate, ISessionsUpdate
+from app.schemas.sessions import ICreate, IUpdate
 from app.crud.base_sqlmodel import CRUDBase
 from app.models.sessions import Sessions
 
 
-class CRUDSessions(CRUDBase[Sessions, ISessionsCreate, ISessionsUpdate]):
-    async def create(self, db_session: AsyncSession, *, obj_in: ISessionsCreate) -> Sessions:
+class CRUD(CRUDBase[Sessions, ICreate, IUpdate]):
+    async def create(self, db_session: AsyncSession, *, obj_in: ICreate) -> Sessions:
         db_obj = obj_in
         db_session.add(db_obj)
         await db_session.commit()
@@ -27,4 +27,4 @@ class CRUDSessions(CRUDBase[Sessions, ISessionsCreate, ISessionsUpdate]):
         return sessions.first()
 
 
-sessions = CRUDSessions(Sessions)
+sessions = CRUD(Sessions)

@@ -12,35 +12,35 @@ from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app.models.user import User
-from app.schemas.resource import IResourceCreate, IResourceRead, IResourceUpdate
+from app.schemas.resource import ICreate, IRead, IUpdate
 from app.schemas.common import IGetResponseBase, IPostResponseBase, IPutResponseBase, IDeleteResponseBase
 
 router = APIRouter()
 
 
-@router.get("/resource/list", response_model=IGetResponseBase[Page[IResourceRead]])
-async def get_resources(
+@router.get("/resource/list", response_model=IGetResponseBase[Page[IRead]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
 ):
     resources = await crud.resource.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[IResourceRead]](data=resources)
+    return IGetResponseBase[Page[IRead]](data=resources)
 
 
-@router.get("/resource/{resource_id}", response_model=IGetResponseBase[IResourceRead])
-async def get_resource_by_id(
+@router.get("/resource/{resource_id}", response_model=IGetResponseBase[IRead])
+async def get(
     resource_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
 ):
     resource = await crud.resource.get(db_session, id=resource_id)
-    return IGetResponseBase[IResourceRead](data=resource)
+    return IGetResponseBase[IRead](data=resource)
 
 
-@router.post("/resource", response_model=IPostResponseBase[IResourceRead])
-async def create_resource(
-    resource: IResourceCreate,
+@router.post("/resource", response_model=IPostResponseBase[IRead])
+async def create(
+    resource: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
 ):
@@ -48,13 +48,13 @@ async def create_resource(
         raise AlreadyExistsException
     # new_resource = await crud.resource.create(db_session, obj_in=resource, created_by_id=current_user.id)
     new_resource = await crud.resource.create(db_session, obj_in=resource)
-    return IPostResponseBase[IResourceRead](data=new_resource)
+    return IPostResponseBase[IRead](data=new_resource)
 
 
-@router.patch("/resource/{resource_id}", response_model=IPutResponseBase[IResourceRead])
-async def update_resource(
+@router.patch("/resource/{resource_id}", response_model=IPutResponseBase[IRead])
+async def update(
     resource_id: UUID,
-    resource: IResourceUpdate,
+    resource: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
 ):
@@ -63,11 +63,11 @@ async def update_resource(
         raise NotFoundException
 
     resource_updated = await crud.resource.update(db_session, obj_current=resource_current, obj_new=resource)
-    return IPutResponseBase[IResourceRead](data=resource_updated)
+    return IPutResponseBase[IRead](data=resource_updated)
 
 
-@router.delete("/resource/{resource_id}", response_model=IDeleteResponseBase[IResourceRead])
-async def remove_team(
+@router.delete("/resource/{resource_id}", response_model=IDeleteResponseBase[IRead])
+async def delete(
     resource_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=False)),
@@ -77,4 +77,4 @@ async def remove_team(
     if not resource_current:
         raise NotFoundException
     resource = await crud.resource.remove(db_session, id=resource_id)
-    return IDeleteResponseBase[IResourceRead](data=resource)
+    return IDeleteResponseBase[IRead](data=resource)

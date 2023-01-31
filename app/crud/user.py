@@ -12,7 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # # Package # #
 from app.crud.base_sqlmodel import CRUDBase
-from app.schemas.user import IUserCreate, IUserUpdate
+from app.schemas.user import ICreate, IUpdate
 from app.utils.exceptions import BadRequestException, ConflictException
 from app.utils.security import verify_password
 from app.models.user import User
@@ -25,7 +25,7 @@ __all__ = (
 )
 
 
-class CRUDUser(CRUDBase[User, IUserCreate, IUserUpdate]):
+class CRUD(CRUDBase[User, ICreate, IUpdate]):
     async def get_by_email(self, db_session: AsyncSession, *, email: str) -> Optional[User]:
         users = await db_session.exec(select(User).where(User.email == email).options(selectinload('*')))
         return users.first()
@@ -94,4 +94,4 @@ class CRUDUser(CRUDBase[User, IUserCreate, IUserUpdate]):
         return user
 
 
-user = CRUDUser(User)
+user = CRUD(User)

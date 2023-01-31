@@ -10,13 +10,13 @@ from app.models.resource import ResourceBase
 from app.utils.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
 
 __all__ = (
-    "IResourceCreate",
-    "IResourceRead",
-    "IResourceUpdate"
+    "ICreate",
+    "IRead",
+    "IUpdate"
 )
 
 
-class IResourceCreate(BaseModel):
+class ICreate(BaseModel):
     endpoint: str
     method: str
     description: Optional[str]
@@ -37,11 +37,11 @@ class IResourceCreate(BaseModel):
         return v
 
 
-class IResourceRead(ResourceBase):
+class IRead(ResourceBase):
     id: UUID
 
 
-class IResourceUpdate(ResourceBase):
+class IUpdate(ResourceBase):
     endpoint: Optional[str]
     method: Optional[str]
     description: Optional[str]

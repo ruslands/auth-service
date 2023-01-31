@@ -22,7 +22,7 @@ Params.__fields__["size"].type_.le = 500
 
 
 class SecretsSettings(BaseSettings):
-    ALLPAPERS_AUTH_SECRETS_MANAGER_ARN: str
+    AUTH_SECRETS_MANAGER_ARN: str
 
     class Config(BaseSettings.Config):
         env_prefix = "AWS_"
@@ -31,7 +31,7 @@ class SecretsSettings(BaseSettings):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for key, value in get_secret(self.ALLPAPERS_AUTH_SECRETS_MANAGER_ARN).items():
+        for key, value in get_secret(self.AUTH_SECRETS_MANAGER_ARN).items():
             if key == "JWK":
                 value = jwk2pem(json.loads(value))
                 for k, v in value.items():

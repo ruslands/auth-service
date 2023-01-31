@@ -9,16 +9,16 @@ from pydantic import BaseModel, EmailStr, validator, root_validator
 # # Package # #
 from app.models.user import UserBase
 from app.utils.security import get_password_hash, create_password
-from .role import IRoleRead
-from .team import ITeamRead
-from .sessions import ISessionsRead
-from .visibility_group import IVisibilityGroupRead
+from .role import IRead
+from .team import IRead
+from .sessions import IRead
+from .visibility_group import IRead
 
 __all__ = (
-    "IUserCreate",
-    "IUserRead",
-    "IUserUpdate",
-    "IUserReadTemporary",
+    "ICreate",
+    "IRead",
+    "IUpdate",
+    "IReadTemporary",
 )
 
 
@@ -37,7 +37,7 @@ class IUserFilter(BaseModel):
             return [v.lower().strip()]
 
 
-class IUserCreate(BaseModel):
+class ICreate(BaseModel):
     first_name: str
     last_name: str
     full_name: Optional[str]
@@ -72,7 +72,7 @@ class IUserCreate(BaseModel):
         values["is_active"] = True
         return values
 
-class IUserReadTemporary(UserBase):  # TODO use IUserRead
+class IReadTemporary(UserBase):  # TODO use IRead
     first_name: Optional[str]
     last_name: Optional[str]
     full_name: Optional[str]
@@ -97,14 +97,14 @@ class IUserReadTemporary(UserBase):  # TODO use IUserRead
         return values
 
 
-class IUserRead(UserBase):
+class IRead(UserBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-    roles: Optional[List[IRoleRead]]
-    teams: Optional[List[ITeamRead]]
-    sessions: Optional[List[ISessionsRead]]
-    visibility_group: Optional[IVisibilityGroupRead]
+    roles: Optional[List[IRead]]
+    teams: Optional[List[IRead]]
+    sessions: Optional[List[IRead]]
+    visibility_group: Optional[IRead]
 
     @root_validator
     def remove_sensitive_data(cls, values):
@@ -113,7 +113,7 @@ class IUserRead(UserBase):
         return values
 
 
-class IUserUpdate(BaseModel):
+class IUpdate(BaseModel):
     team_id: Optional[UUID]
     phone: Optional[str]
     country: Optional[str]

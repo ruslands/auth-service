@@ -6,22 +6,22 @@ from typing import Optional, List
 
 # # Package # #
 from app.models.role import RoleBase
-from app.schemas.resource import IResourceRead
+from app.schemas.resource import IRead
 from app.models.base_uuid_model import BaseUUIDModel
 
 
-class IRoleCreate(RoleBase):
+class ICreate(RoleBase):
     pass
 
 
-class IRoleRead(RoleBase):
+class IRead(RoleBase):
     id: UUID
 
 
-class IRoleReadWithPermissions(RoleBase):
+class IReadWithPermissions(RoleBase):
     id: UUID
-    resources: Optional[List["IResourceRead"]]
+    resources: Optional[List["IRead"]]
 
 
-class IRoleUpdate(RoleBase, BaseUUIDModel):
+class IUpdate(RoleBase, BaseUUIDModel):
     pass

@@ -1,5 +1,5 @@
 site_name: auth
-site_url: https://development.rivehomes.com/auth/mkdocs
+site_url: https://development.site-name.com/auth/mkdocs
 nav:
     - Home: index.md
     - About: about.md

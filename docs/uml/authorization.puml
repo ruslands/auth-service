@@ -1,10 +1,10 @@
 @startuml fotocasa_lead_integration
 !theme cerulean-outline
  
-participant "kodit-backoffice" as backoffice
-participant "kodit-proxy" as proxy
-participant "kodit-service" as service
-participant "kodit-auth" as auth
+participant "backoffice" as backoffice
+participant "proxy" as proxy
+participant "service" as service
+participant "auth" as auth
 database "postgres" as postgres
 database "redis" as redis
  
@@ -19,8 +19,8 @@ skinparam DefaultFontName SansSerif
  
 title Authentication
 
-backoffice -> proxy: /api/kodit-service
-proxy -> service: /api/kodit-service
+backoffice -> proxy: /api/service
+proxy -> service: /api/service
 service -> service: init sensitive function
 service -> auth: check permission
 auth -> service: api call allowed

@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: allpapers
+Description: auth-service
 
 Globals:
   Function:
@@ -14,16 +14,16 @@ Mappings:
     development:
       CorsOrigins:
         - http://localhost
-        - https://development.allpapers.online
-      KoditAuthSecretsManagerArn: secret:KoditAuthSecret-dev-FpWzXN
-      LambdaAuthorizerSecretsManagerArn: secret:lambdaAuthorizer-development-UJyeYl
+        - https://development.hostname
+      AuthSecretsManagerArn: secret:
+      LambdaAuthorizerSecretsManagerArn: secret:
       AppBaseUrl: https://development.allpapers.online
     production:
       CorsOrigins:
         - https://allpapers.online
-      KoditAuthSecretsManagerArn: secret:KoditAuthSecret-production-QZnoiH
-      LambdaAuthorizerSecretsManagerArn: secret:lambdaAuthorizer-production-tum95k
-      AppBaseUrl: https://allpapers.online
+      AuthSecretsManagerArn: secret:
+      LambdaAuthorizerSecretsManagerArn: secret:
+      AppBaseUrl: https://hostname
       ProvisionedConcurrency: 1
 Parameters:
   Environment:
@@ -61,8 +61,7 @@ Resources:
           - "*"
         AllowOrigins:
           - http://localhost
-          - https://dev.kodit.io
-          - https://development.kodit.io
+          - https://development.hostname
           
   LambdaAuthorizer:
     Type: AWS::Serverless::Function

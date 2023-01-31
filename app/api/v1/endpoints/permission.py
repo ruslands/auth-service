@@ -12,7 +12,7 @@ from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app.models.user import User
-from app.schemas.permission import IPermissionCreate, IPermissionRead, IPermissionUpdate
+from app.schemas.permission import ICreate, IRead, IUpdate
 from app.schemas.common import (
     IGetResponseBase,
     IPostResponseBase,
@@ -23,42 +23,42 @@ from app.schemas.common import (
 router = APIRouter()
 
 
-@router.get("/permission/list", response_model=IGetResponseBase[Page[IPermissionRead]])
-async def get_permissions(
+@router.get("/permission/list", response_model=IGetResponseBase[Page[IRead]])
+async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
     permissions = await crud.permission.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[IPermissionRead]](data=permissions)
+    return IGetResponseBase[Page[IRead]](data=permissions)
 
 
-@router.get("/permission/{permission_id}", response_model=IGetResponseBase[IPermissionRead])
-async def get_permission_by_id(
+@router.get("/permission/{permission_id}", response_model=IGetResponseBase[IRead])
+async def get(
     permission_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user()),
 ):
     permission = await crud.permission.get(db_session, id=permission_id)
-    return IGetResponseBase[IPermissionRead](data=permission)
+    return IGetResponseBase[IRead](data=permission)
 
 
-@router.post("/permission", response_model=IPostResponseBase[IPermissionRead])
-async def create_permission(
-    new_permission: IPermissionCreate,
+@router.post("/permission", response_model=IPostResponseBase[IRead])
+async def create(
+    new_permission: ICreate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
     if await crud.permission.get_permission_by_resource_id_role_id(db_session, permission=new_permission):
         raise AlreadyExistsException
     new_permission = await crud.permission.create(db_session, obj_in=new_permission)
-    return IPostResponseBase[IPermissionRead](data=new_permission)
+    return IPostResponseBase[IRead](data=new_permission)
 
 
-@router.patch("/permission/{permission_id}", response_model=IPutResponseBase[IPermissionRead])
-async def update_permission(
+@router.patch("/permission/{permission_id}", response_model=IPutResponseBase[IRead])
+async def update(
     permission_id: UUID,
-    permission: IPermissionUpdate,
+    permission: IUpdate,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
 ):
@@ -67,11 +67,11 @@ async def update_permission(
         raise NotFoundException
 
     updated_permission = await crud.permission.update(db_session, obj_current=current_permission, obj_new=permission)
-    return IPutResponseBase[IPermissionRead](data=updated_permission)
+    return IPutResponseBase[IRead](data=updated_permission)
 
 
-@router.delete("/permission/{permission_id}", response_model=IGetResponseBase[IPermissionRead])
-async def delete_permission_by_id(
+@router.delete("/permission/{permission_id}", response_model=IGetResponseBase[IRead])
+async def delete(
     permission_id: UUID,
     db_session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user(required_permissions=True)),
@@ -80,6 +80,6 @@ async def delete_permission_by_id(
     if not permission:
         raise NotFoundException
     permission = await crud.permission.remove(db_session, id=permission_id)
-    return IDeleteResponseBase[IPermissionRead](
+    return IDeleteResponseBase[IRead](
         data=permission
     )

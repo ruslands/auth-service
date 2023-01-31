@@ -109,8 +109,7 @@ pipelines:
           - >
             echo export 
             ENVIRONMENT=development
-            AWS_KODIT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:131469615986:secret:KoditAuthSecret-dev-FpWzXN
-            AWS_JWT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358
+            AWS_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:
             >> set_env.sh
     - step:
         <<: *validate
@@ -131,8 +130,7 @@ pipelines:
             - >
               echo export 
               ENVIRONMENT=staging
-              AWS_KODIT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:654468729721:secret:KoditAuthSecret-staging-gxXBPD
-              AWS_JWT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:654468729721:secret:JwtAuthSecret-staging-nB3yd9
+              AWS_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:
               >> set_env.sh
       - step:
           <<: *migration
@@ -147,8 +145,7 @@ pipelines:
             - >
               echo export 
               ENVIRONMENT=production
-              AWS_KODIT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:654468729721:secret:KoditAuthSecret-production-QZnoiH
-              AWS_JWT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:eu-central-1:654468729721:secret:JwtAuthSecret-production-X17S6i
+              AWS_KODIT_AUTH_SECRETS_MANAGER_ARN=arn:aws:secretsmanager:
               >> set_env.sh
       - step:
           <<: *migration

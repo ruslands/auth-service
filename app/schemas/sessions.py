@@ -8,13 +8,13 @@ from pydantic import BaseModel
 from app.models.sessions import SessionsBase
 
 __all__ = (
-    "ISessionsCreate",
-    "ISessionsRead",
-    "ISessionsUpdate",
+    "ICreate",
+    "IRead",
+    "IUpdate",
 )
 
 
-class ISessionsCreate(BaseModel):
+class ICreate(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
@@ -22,7 +22,7 @@ class ISessionsCreate(BaseModel):
     user_id: UUID
 
 
-class ISessionsUpdate(BaseModel):
+class IUpdate(BaseModel):
     id: UUID
     access_token: str
     refresh_token: str
@@ -30,5 +30,5 @@ class ISessionsUpdate(BaseModel):
     refresh_token_expires: int
 
 
-class ISessionsRead(SessionsBase):
+class IRead(SessionsBase):
     id: UUID

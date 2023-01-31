@@ -5,13 +5,13 @@ from sqlmodel import select, and_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
-from app.schemas.resource import IResourceCreate, IResourceUpdate
+from app.schemas.resource import ICreate, IUpdate
 from app.models.resource import Resource
 from app.crud.base_sqlmodel import CRUDBase
 from app.utils.settings import settings
 
 
-class CRUDResource(CRUDBase[Resource, IResourceCreate, IResourceUpdate]):
+class CRUD(CRUDBase[Resource, ICreate, IUpdate]):
     async def get_resource_by_endpoint_and_method(self, db_session: AsyncSession, *, endpoint: str, method: str) -> Resource:
         endpoint = endpoint.replace(settings.HOSTNAME, "")
         method = method.lower()
@@ -19,4 +19,4 @@ class CRUDResource(CRUDBase[Resource, IResourceCreate, IResourceUpdate]):
         return resource.first()
 
 
-resource = CRUDResource(Resource)
+resource = CRUD(Resource)
