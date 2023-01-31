@@ -7,6 +7,7 @@ from pydantic import BaseModel, validator
 
 # # Package # #
 from app.models.resource import ResourceBase
+from app.models.base_uuid_model import BaseUUIDModel
 from app.utils.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
 
 __all__ = (
@@ -37,8 +38,8 @@ class ICreate(BaseModel):
         return v
 
 
-class IRead(ResourceBase):
-    id: UUID
+class IRead(ResourceBase, BaseUUIDModel):
+    ...
 
 
 class IUpdate(ResourceBase):

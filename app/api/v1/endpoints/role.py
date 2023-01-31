@@ -14,7 +14,7 @@ from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
 from app.models.user import User
-from app.schemas.role import ICreate, IRead, IUpdate, IReadWithPermissions
+from app.schemas.role import ICreate, IRead, IUpdate, IRead
 from app.schemas.common import (
     IGetResponseBase,
     IPostResponseBase,
@@ -35,7 +35,7 @@ async def list(
     return IGetResponseBase[Page[IRead]](data=roles)
 
 
-@router.get("/role/{role_id}", response_model=IGetResponseBase[IReadWithPermissions])
+@router.get("/role/{role_id}", response_model=IGetResponseBase[IRead])
 async def get(
     role_id: UUID,
     db_session: AsyncSession = Depends(get_session),
@@ -43,7 +43,7 @@ async def get(
 ):
     role = await crud.role.get(db_session, id=role_id)
     logger.debug(role)
-    return IGetResponseBase[IReadWithPermissions](data=role)
+    return IGetResponseBase[IRead](data=role)
 
 
 @router.post("/role", response_model=IPostResponseBase[IRead])

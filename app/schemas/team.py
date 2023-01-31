@@ -11,7 +11,7 @@ from app.models.base_uuid_model import BaseUUIDModel
 
 
 class IRead(TeamBase, BaseUUIDModel):
-    ...
+    users: List[UserBase]
 
 
 class ICreate(BaseModel):
@@ -22,9 +22,5 @@ class ICreate(BaseModel):
         return v.lower().strip().strip('/')
 
 
-class IUpdate(TeamBase, BaseUUIDModel):
+class IUpdate(TeamBase):
     ...
-
-
-class IReadWithUsers(IRead):
-    users: List[UserBase]

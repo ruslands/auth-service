@@ -16,7 +16,7 @@ from app.schemas.common import (
     IPostResponseBase,
     IPutResponseBase,
 )
-from app.schemas.team import ICreate, IRead, IReadWithUsers, IUpdate
+from app.schemas.team import ICreate, IRead, IRead, IUpdate
 from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
@@ -34,7 +34,7 @@ async def list(
     return IGetResponseBase[Page[IRead]](data=teams)
 
 
-@router.get("/team/{team_id}", response_model=IGetResponseBase[IReadWithUsers])
+@router.get("/team/{team_id}", response_model=IGetResponseBase[IRead])
 async def get(
     team_id: UUID,
     db_session: AsyncSession = Depends(get_session),
@@ -43,7 +43,7 @@ async def get(
     team = await crud.team.get(db_session, id=team_id)
     if not team:
         raise NotFoundException
-    return IGetResponseBase[IReadWithUsers](data=team)
+    return IGetResponseBase[IRead](data=team)
 
 
 @router.post("/team", response_model=IPostResponseBase[IRead])

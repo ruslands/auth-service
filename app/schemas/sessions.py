@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 # # Package # #
 from app.models.sessions import SessionsBase
+from app.models.base_uuid_model import BaseUUIDModel
 
 __all__ = (
     "ICreate",
@@ -14,21 +15,13 @@ __all__ = (
 )
 
 
-class ICreate(BaseModel):
-    access_token: str
-    refresh_token: str
-    token_type: str
-    expires_at: int
-    user_id: UUID
+class ICreate(SessionsBase):
+    ...
 
 
-class IUpdate(BaseModel):
-    id: UUID
-    access_token: str
-    refresh_token: str
-    access_token_expires: int
-    refresh_token_expires: int
+class IUpdate(SessionsBase):
+    ...
 
 
-class IRead(SessionsBase):
-    id: UUID
+class IRead(SessionsBase, BaseUUIDModel):
+    ...

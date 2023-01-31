@@ -5,6 +5,7 @@ from uuid import UUID
 
 # # Package # #
 from app.models.permission import PermissionBase
+from app.models.base_uuid_model import BaseUUIDModel
 
 
 __all__ = (
@@ -15,14 +16,12 @@ __all__ = (
 
 
 class ICreate(PermissionBase):
-    role_id: UUID
-    resource_id: UUID
+    ...
 
 
-class IRead(PermissionBase):
-    role_id: UUID
-    resource_id: UUID
+class IRead(PermissionBase, BaseUUIDModel):
+    ...
 
 
 class IUpdate(PermissionBase):
-    pass
+    ...

@@ -25,12 +25,12 @@ class SessionsBase(SQLModel):
     refresh_token: str
     token_type: str = "bearer"
     expires_at: int
-    created_at: Optional[datetime] = Field(sa_column=Column(
+    created_at: datetime = Field(sa_column=Column(
         TIMESTAMP, server_default=func.now()))
 
 
 class Sessions(SessionsBase, table=True):
-    user_id: Optional[UUID] = Field(
+    user_id: UUID = Field(
         default=None, foreign_key="user.id", index=False, sa_column_kwargs={"unique": False})
     user: "User" = Relationship(sa_relationship_kwargs={
                                 'uselist': False}, back_populates="sessions")
