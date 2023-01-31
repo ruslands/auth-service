@@ -15,14 +15,14 @@ Mappings:
       CorsOrigins:
         - http://localhost
         - https://development.hostname
-      AuthSecretsManagerArn: secret:
-      LambdaAuthorizerSecretsManagerArn: secret:
-      AppBaseUrl: https://development.allpapers.online
+      AuthSecretsManagerArn: "<secret arn>"
+      LambdaAuthorizerSecretsManagerArn: "<secret arn>"
+      AppBaseUrl: https://development.hostname
     production:
       CorsOrigins:
-        - https://allpapers.online
-      AuthSecretsManagerArn: secret:
-      LambdaAuthorizerSecretsManagerArn: secret:
+        - https://hostname
+      AuthSecretsManagerArn: "<secret arn>"
+      LambdaAuthorizerSecretsManagerArn: "<secret arn>"
       AppBaseUrl: https://hostname
       ProvisionedConcurrency: 1
 Parameters:
@@ -73,17 +73,14 @@ Resources:
       Runtime: python3.9
       # Environment:
       #   Variables:
-      #     APP_FUNCTION_ARN: arn:aws:lambda:eu-central-1:131469615986:function:kodit-auth-development-AppFunction-pdWjYxyKB9ws
+      #     APP_FUNCTION_ARN: arn:aws:lambda:eu-central-1:123456789:function:auth-development-AppFunction
       #     APP_BASE_URL: !FindInMap [ Settings, !Ref Environment, AppBaseUrl ]
-      #     AWS_JWT_AUTH_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358
-      #     AWS_LAMBDA_AUTHORIZER_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:131469615986:secret:lambdaAuthorizer-development-UJyeYl
+      #     AWS_LAMBDA_AUTHORIZER_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:123456789:secret:lambdaAuthorizer-development
       # Policies:
-      #   - AWSSecretsManagerGetSecretValuePolicy:
-      #       SecretArn: arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358
       #   - LambdaInvokePolicy:
       #       FunctionName: !GetAtt AppFunction.Arn
       #   - AWSSecretsManagerGetSecretValuePolicy:
-      #       SecretArn: arn:aws:secretsmanager:eu-central-1:131469615986:secret:lambdaAuthorizer-development-UJyeYl
+      #       SecretArn: arn:aws:secretsmanager:eu-central-1:123456789:secret:lambdaAuthorizer-development
       Environment:
         Variables:
           APP_FUNCTION_ARN: !GetAtt AppFunction.Arn
@@ -193,22 +190,17 @@ Resources:
               Authorizer: NONE
       Environment:
         Variables:
-          AWS_KODIT_AUTH_SECRETS_MANAGER_ARN: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, KoditAuthSecretsManagerArn ] ] ]
-          AWS_JWT_AUTH_SECRETS_MANAGER_ARN: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, JwtAuthSecretsManagerArn ] ] ]
+          AWS_AUTH_SECRETS_MANAGER_ARN: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, AuthSecretsManagerArn ] ] ]
       Policies:
         - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, KoditAuthSecretsManagerArn ] ] ]
-        - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, JwtAuthSecretsManagerArn ] ] ]
+            SecretArn: !Join [ ":", [ arn:aws:secretsmanager, !Ref AWS::Region, !Ref AWS::AccountId, !FindInMap [ Settings, !Ref Environment, AuthSecretsManagerArn ] ] ]
+
       # Environment:
       #   Variables:
-      #     AWS_KODIT_AUTH_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:131469615986:secret:KoditAuthSecret-dev-FpWzXN
-      #     AWS_JWT_AUTH_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358
+      #     AWS_AUTH_SECRETS_MANAGER_ARN: arn:aws:secretsmanager:eu-central-1:123456789:secret:AuthSecret-development
       # Policies:
       #   - AWSSecretsManagerGetSecretValuePolicy:
-      #       SecretArn: arn:aws:secretsmanager:eu-central-1:131469615986:secret:KoditAuthSecret-dev-FpWzXN
-      #   - AWSSecretsManagerGetSecretValuePolicy:
-      #       SecretArn: arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358
+      #       SecretArn: arn:aws:secretsmanager:eu-central-1:123456789:secret:AuthSecret-development
 
 Outputs:
   # ServerlessHttpApi is an implicit API created out of Events key under Serverless::Function

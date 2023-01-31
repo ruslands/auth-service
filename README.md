@@ -1,4 +1,4 @@
-# Kodit Auth
+# Authentication and Authorisation service
 
 Service scope:
 

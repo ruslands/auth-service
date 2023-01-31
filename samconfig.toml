@@ -10,7 +10,7 @@ capabilities = 'CAPABILITY_IAM'
 confirm_changeset = true
 region = 'eu-central-1'
 resolve_image_repos = true
-stack_name = 'kodit-auth-development'
+stack_name = 'auth-development'
 disable_rollback = true
 debug = true
 resolve_s3 = true
@@ -24,7 +24,7 @@ capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 region = "eu-central-1"
 resolve_image_repos = true
-stack_name = "kodit-auth-staging"
+stack_name = "auth-staging"
 disable_rollback = true
 debug = true
 parameter_overrides = "Environment=staging"
@@ -37,7 +37,7 @@ capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 region = "eu-central-1"
 resolve_image_repos = true
-stack_name = "kodit-auth-production"
+stack_name = "auth-production"
 disable_rollback = true
 debug = true
 parameter_overrides = "Environment=production"

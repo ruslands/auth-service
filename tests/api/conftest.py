@@ -4,14 +4,13 @@ import pytest
 from datetime import datetime
 from fastapi.testclient import TestClient
 
-if "AWS_KODIT_AUTH_SECRETS_MANAGER_ARN" not in os.environ and "AWS_JWT_AUTH_SECRETS_MANAGER_ARN" not in os.environ:
-    os.environ['AWS_KODIT_AUTH_SECRETS_MANAGER_ARN'] = "arn:aws:secretsmanager:eu-central-1:131469615986:secret:KoditAuthSecret-dev-FpWzXN"
-    os.environ['AWS_JWT_AUTH_SECRETS_MANAGER_ARN'] = "arn:aws:secretsmanager:eu-central-1:131469615986:secret:JwtAuthSecret-dev-ODz358"
+if "AWS_AUTH_SECRETS_MANAGER_ARN" not in os.environ:
+    os.environ['AWS_AUTH_SECRETS_MANAGER_ARN'] = "<service secret arn>"
 
 from app.main import app
 
-pytest.test_username = "ruslan.konovalov@kodit.io"
-pytest.test_password = "WBYGtuUhhFbyxpi"
+pytest.test_username = "email"
+pytest.test_password = "password"
 pytest.expires_at = 0
 
 

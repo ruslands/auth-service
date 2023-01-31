@@ -1,6 +1,7 @@
 import json
 import pytest
 
+hostname = "hostname"
 
 @pytest.mark.usefixtures("test_client", "test_basic")
 class TestAuth:
@@ -23,7 +24,7 @@ class TestAuth:
                                        "code": "4/0ARtbsJpwaSlWbCdZ9ynf639_518UYHVL88ZK9o4zPTU_OvBEwTPxR3VXTaD_IJCoDwEDoQ",
                                        "scope": "email%20profile%20openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile",
                                        "authuser": "0",
-                                       "hd": "kodit.io",
+                                       "hd": hostname,
                                        "prompt": "consent",
                                    })
         assert response.status_code == 400

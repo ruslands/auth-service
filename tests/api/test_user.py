@@ -17,7 +17,7 @@ class TestUser:
                                         "first_name": "test",
                                         "last_name": "test",
                                         "full_name": "test test",
-                                        "email": "test.test@kodit.io",
+                                        "email": "test.test@hostname.com",
                                         "phone": "",
                                         "country": "",
                                         "city": "",
