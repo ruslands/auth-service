@@ -15,7 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # # Package # #
 from app import crud
-from app.utils.security import create_jwt_token, verify_jwt_token
+from app.utils.security import create_jwt_token, verify_jwt_token, create_cookie
 from app.utils.settings import settings
 from app.utils.logger import logger
 from app.utils.exceptions import ConflictException, NotFoundException, UnauthorizedException, BadRequestException
@@ -75,7 +75,6 @@ async def basic(
     access_token, expires_at = create_jwt_token({
         "user_id": str(user.id),
         "email": user.email,
-        "region": "finland, spain, poland",
         "roles": roles,
         "teams": teams,
         "visibility_group": user.visibility_group.prefix if user.visibility_group else None
@@ -84,10 +83,10 @@ async def basic(
         "user_id": str(user.id)
     }, expires_delta=refresh_token_expires, type="refresh")
 
-    # cookie = request.cookies.get("auth")
-    # if not cookie:
-    #     cookie = create_cookie()
-    #     response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
+    cookie = request.cookies.get("auth")
+    if not cookie:
+        cookie = create_cookie()
+        response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
 
     data = Token(
         access_token=access_token,
@@ -95,26 +94,26 @@ async def basic(
         refresh_token=refresh_token,
         refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         expires_at=expires_at,
-        # cookie=cookie
+        cookie=cookie
     )
     new_session = Sessions(
         access_token=access_token,
         refresh_token=refresh_token,
         user_id=user.id,
-        expires_at=expires_at
+        expires_at=expires_at,
+        cookie=cookie
     )
     meta_data = {
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "region": user.region,
         "roles": [i.name for i in user.roles]
     }
     if user.sessions:
-        # for i in user.sessions:
-        #     if i.cookie == cookie:
-        #         await crud.sessions.remove(db_session, id=i.id)
+        for i in user.sessions:
+            if i.cookie == cookie:
+                await crud.sessions.remove(db_session, id=i.id)
         if len(user.sessions) >= AMOUNT_OF_SESSSIONS_PER_USER:
             oldest_session = sorted(user.sessions, key=lambda x: x.created_at)[0]
             await crud.sessions.remove(db_session, id=oldest_session.id)
@@ -211,7 +210,6 @@ async def google_callback(
     access_token, expires_at = create_jwt_token({
         "user_id": str(user.id),
         "email": user.email,
-        "region": user.region,
         "roles": roles,
         "teams": teams,
         "visibility_group": user.visibility_group.prefix if user.visibility_group else None
@@ -220,10 +218,10 @@ async def google_callback(
         "user_id": str(user.id)
     }, expires_delta=refresh_token_expires, type="refresh")
 
-    # cookie = request.cookies.get("auth")
-    # if not cookie:
-    #     cookie = create_cookie()
-    #     response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
+    cookie = request.cookies.get("auth")
+    if not cookie:
+        cookie = create_cookie()
+        response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
 
     data = Token(
         access_token=access_token,
@@ -231,28 +229,26 @@ async def google_callback(
         refresh_token=refresh_token,
         refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         expires_at=expires_at,
-        # cookie=cookie,
+        cookie=cookie,
     )
     new_session = Sessions(
         access_token=access_token,
         refresh_token=refresh_token,
         user_id=user.id,
-        expires_at=expires_at
+        expires_at=expires_at,
+        cookie=cookie,
     )
-    # TODO: assign applications to user based on region or role
     meta_data = {
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "region": user.region,
         "roles": [i.name for i in user.roles],
-        "state": state
     }
     if user.sessions:
-        # for i in user.sessions:
-        #     if i.cookie == request.cookies.get("auth"):
-        #         await crud.sessions.remove(db_session, id=i.id)
+        for i in user.sessions:
+            if i.cookie == request.cookies.get("auth"):
+                await crud.sessions.remove(db_session, id=i.id)
         if len(user.sessions) >= AMOUNT_OF_SESSSIONS_PER_USER:
             oldest_session = sorted(user.sessions, key=lambda x: x.created_at)[0]
             await crud.sessions.remove(db_session, id=oldest_session.id)
@@ -298,7 +294,6 @@ async def refresh_token(
     access_token, expires_at = create_jwt_token({
         "user_id": str(user.id),
         "email": user.email,
-        "region": user.region,
         "roles": roles,
         "teams": teams,
         "visibility_group": user.visibility_group.prefix if user.visibility_group else None
@@ -311,20 +306,20 @@ async def refresh_token(
         refresh_token=body.refresh_token
     )
 
-    # cookie = request.cookies.get("auth")
+    cookie = request.cookies.get("auth")
     for s in user.sessions:
         if s.refresh_token == body.refresh_token:
-            # if not cookie:
-            #     if s.cookie:
-            #         cookie = s.cookie
-            #         response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
-            #     else:
-            #         cookie = create_cookie()
-            #         response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
+            if not cookie:
+                if s.cookie:
+                    cookie = s.cookie
+                    response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
+                else:
+                    cookie = create_cookie()
+                    response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
             await crud.sessions.update(db_session, obj_current=s, obj_new={
                 "access_token": access_token,
                 "expires_at": expires_at,
-                # cookie: cookie
+                cookie: cookie
             })
             return IPostResponseBase[Token](data=data, message="Access token generated correctly")
     raise UnauthorizedException(detail="The session does not exist")
@@ -356,7 +351,6 @@ async def logout(
 ):
     if current_user.sessions:
         for i in current_user.sessions:
-            # if i.cookie == request.cookies.get("auth") or i.access_token == access_token:
-            if i.access_token == access_token:
+            if i.cookie == request.cookies.get("auth") or i.access_token == access_token:
                 await crud.sessions.remove(db_session, id=i.id)
     return IGetResponseBase(data={})
