@@ -33,7 +33,7 @@ router = APIRouter()
 google_sso = GoogleSSO(
     client_id=settings.GOOGLE_CLIENT_ID,
     client_secret=settings.GOOGLE_CLIENT_SECRET,
-    allow_insecure_http=False,
+    allow_insecure_http=True,
     use_state=False,
 )
 if google_sso.allow_insecure_http:
@@ -190,7 +190,7 @@ async def google_callback(
         raise BadRequestException(detail=str(e))
     try:
         user = await crud.user.get_by_email(db_session, email=google_user.email)
-    except SQLAlchemyError as e:
+    except Exception as e:
         raise ConflictException(detail=f"database error: {e.orig}")
     if not user:
         new_user = ICreate.parse_obj(google_user.dict())
@@ -281,7 +281,10 @@ async def refresh_token(
     Get Refresh token
     """
     payload = await verify_jwt_token(token=body.refresh_token, type="refresh", db_session=db_session)
-    user = await crud.user.get(db_session, id=payload['user_id'])
+    try:
+        user = await crud.user.get(db_session, id=payload['user_id'])
+    except Exception as e:
+        raise ConflictException(detail=f"database error: {e.orig}")
     if not user:
         raise NotFoundException(detail="User not found")
     elif not user.is_active:
