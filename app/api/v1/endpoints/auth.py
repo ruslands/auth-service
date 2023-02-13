@@ -238,7 +238,7 @@ async def google_callback(
         expires_at=expires_at,
         cookie=cookie,
     )
-    meta_data = {
+    meta = {
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
@@ -253,7 +253,7 @@ async def google_callback(
             oldest_session = sorted(user.sessions, key=lambda x: x.created_at)[0]
             await crud.sessions.remove(db_session, id=oldest_session.id)
     await crud.sessions.create(db_session, obj_in=new_session)
-    return IGetResponseBase[Token](meta=meta_data, data=data, message="Login correctly")
+    return IGetResponseBase[Token](meta=meta, data=data, message="Login correctly")
 
 
 @router.post("/auth/refresh-token", response_model=IPostResponseBase[Token],
@@ -308,7 +308,13 @@ async def refresh_token(
         refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         refresh_token=body.refresh_token
     )
-
+    meta = {
+        "full_name": user.full_name,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "roles": [i.name for i in user.roles],
+    }
     cookie = request.cookies.get("auth")
     for s in user.sessions:
         if s.refresh_token == body.refresh_token:
@@ -324,7 +330,7 @@ async def refresh_token(
                 "expires_at": expires_at,
                 cookie: cookie
             })
-            return IPostResponseBase[Token](data=data, message="Access token generated correctly")
+            return IPostResponseBase[Token](meta=meta, data=data, message="Access token generated correctly")
     raise UnauthorizedException(detail="The session does not exist")
 
 

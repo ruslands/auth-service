@@ -29,6 +29,7 @@ class UserBase(SQLModel):
     is_superuser: bool = Field(default=False)
     allow_basic_login: bool = Field(default=False)
     phone: Optional[str]
+    country_code: Optional[str]
     country: Optional[str]
     aliases: Optional[Set[str]] = Field(
         default=None, sa_column=Column(postgresql.ARRAY(String())))
@@ -55,8 +56,8 @@ class User(BaseUUIDModel, UserBase, table=True):
 # spendings
 # cashback_available
 # cashback_used
-# accepted_ptivacy_policy
-# accepted_ptivacy_policy_timestamp
+# accepted_privacy_policy
+# accepted_privacy_policy_timestamp
 # accepted_privacy_policy_ip
 # accepted_terms_of_use
 # accepted_terms_of_use_timestamp
