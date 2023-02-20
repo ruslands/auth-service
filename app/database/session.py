@@ -29,14 +29,18 @@ async_session_factory = async_scoped_session(async_session_factory, scopefunc=la
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory() as session:
-        yield session
-        await session.commit()
+        # yield session
+        # await session.commit()
         # await session.close()
-        # try:
-        #     yield session
-        #     await session.commit()
-        # finally:
-        #     await session.close()
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            await session.close()
+
 
 async def get_session_with_bind() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory(bind=async_engine) as session:
