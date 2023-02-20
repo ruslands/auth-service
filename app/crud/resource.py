@@ -8,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.schemas.resource import ICreate, IUpdate
 from app.models.resource import Resource
 from app.crud.base_sqlmodel import CRUDBase
-from app.utils.settings import settings
+from core.settings import settings
 
 
 class CRUD(CRUDBase[Resource, ICreate, IUpdate]):

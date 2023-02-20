@@ -8,9 +8,9 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
 from app import crud
-from app.utils.security import verify_jwt_token
-from app.utils.settings import settings
-from app.utils.logger import logger
+from core.security import verify_jwt_token
+from core.settings import settings
+from core.logger import logger
 from app.schemas.rbac import IRBACValidate, IRBACValidateResponse
 
 __all__ = (

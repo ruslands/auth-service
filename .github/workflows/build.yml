@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: List files in the repository
+        run: ls ${{ github.workspace }}
+      - name: Black Code Formatter
+        uses: lgeiger/black-action@master
+        with:
+          args: './backend --check --line-length 120'
+      - name: Build the stack
+        run: docker-compose build
+      - name: Run backend UT
+        run: docker-compose run backend pytest -p no:cacheprovider
+      - name: Run frontend UT
+        run: docker-compose run frontend npm run test:all
+      # - name: Run the stack
+      #   run: docker-compose up -d

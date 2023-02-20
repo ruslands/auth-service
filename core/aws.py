@@ -7,7 +7,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 # # Package # #
-from app.utils.logger import logger
+from core.logger import logger
 
 __all__ = (
     "get_secret",

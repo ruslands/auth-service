@@ -8,7 +8,7 @@ from pydantic import BaseModel, validator
 # # Package # #
 from app.models.resource import ResourceBase
 from app.models.base_uuid_model import BaseUUIDModel
-from app.utils.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
+from core.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
 
 __all__ = (
     "ICreate",

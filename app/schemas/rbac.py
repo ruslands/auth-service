@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from pydantic import BaseModel, validator
 
 # # Installed # #
-from app.utils.logger import logger
+from core.logger import logger
 
 __all__ = (
     "IRBACRead",

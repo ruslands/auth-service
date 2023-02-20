@@ -7,8 +7,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi import APIRouter, Depends
 
 # # Package # #
-from app.utils.settings import Params, Page
-from app.utils.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
+from core.settings import Params, Page
+from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
 from app.models.user import User
 from app.schemas.common import (
     IDeleteResponseBase,

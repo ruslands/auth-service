@@ -6,8 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi import APIRouter, Depends
 
 # # Package # #
-from app.utils.settings import Params, Page
-from app.utils.exceptions import NotFoundException
+from core.settings import Params, Page
+from core.exceptions import NotFoundException
 from app import crud
 from app.models import User
 from app.schemas.sessions import IRead

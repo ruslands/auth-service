@@ -21,8 +21,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import NoEncryption
 
 # # Package # #
-from app.utils.logger import logger
-from app.utils.exceptions import NotFoundException
+from core.logger import logger
+from core.exceptions import NotFoundException
 
 
 __all__ = (

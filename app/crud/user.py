@@ -13,8 +13,8 @@ from sqlalchemy.exc import SQLAlchemyError
 # # Package # #
 from app.crud.base_sqlmodel import CRUDBase
 from app.schemas.user import ICreate, IUpdate
-from app.utils.exceptions import BadRequestException, ConflictException
-from app.utils.security import verify_password
+from core.exceptions import BadRequestException, ConflictException
+from core.security import verify_password
 from app.models.user import User
 from app.models.role import Role
 from app.models.team import Team

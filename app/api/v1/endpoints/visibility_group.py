@@ -8,17 +8,17 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 
 # # Package # #
-from app.utils.security import verify_jwt_token
-from app.utils.settings import Params, Page, settings
-from app.utils.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
+from core.security import verify_jwt_token
+from core.settings import Params, Page, settings
+from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
 from app.models.user import User
 from app.schemas.common import IDeleteResponseBase, IGetResponseBase, IPostResponseBase, IPutResponseBase
 from app.schemas.visibility_group import *
 from app import crud
 from app.database.user import get_current_user
 from app.database.session import get_session
-from app.utils.logger import logger
-from app.utils.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
+from core.logger import logger
+from core.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
 
 router = APIRouter()
 

@@ -9,11 +9,11 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
-from app.utils.settings import settings
-from app.utils.security import verify_jwt_token
+from core.settings import settings
+from core.security import verify_jwt_token
 from app.models.user import User
 from app import crud
-from app.utils.exceptions import NotFoundException, UnauthorizedException, ConflictException, ForbiddenException
+from core.exceptions import NotFoundException, UnauthorizedException, ConflictException, ForbiddenException
 from app.schemas.common import IMetaGeneral
 from app.schemas.rbac import IRBACValidate
 from app.database.session import get_session

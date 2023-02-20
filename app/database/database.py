@@ -8,7 +8,7 @@ from sqlalchemy.engine import make_url
 from sqlmodel import SQLModel
 
 # # Package # #
-from app.utils.settings import settings
+from core.settings import settings
 
 
 __all__ = (

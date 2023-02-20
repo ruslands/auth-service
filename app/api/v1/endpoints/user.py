@@ -9,9 +9,9 @@ from sqlmodel import select
 from fastapi import APIRouter, Depends
 
 # # Package # #
-from app.utils.settings import Params, Page
-from app.utils.logger import logger
-from app.utils.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
+from core.settings import Params, Page
+from core.logger import logger
+from core.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
 from app.schemas.user import ICreate, IRead, IUpdate, IReadTemporary, IUserFilter
 from app.database.user import get_current_user
 from app.database.session import get_session

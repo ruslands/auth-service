@@ -8,7 +8,7 @@ from pydantic import BaseModel, EmailStr, validator, root_validator
 
 # # Package # #
 from app.models.user import UserBase
-from app.utils.security import get_password_hash, create_password
+from core.security import get_password_hash, create_password
 from .role import IRead
 from .team import IRead
 from .sessions import IRead

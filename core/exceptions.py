@@ -4,8 +4,8 @@ from fastapi import status as statuscode
 from fastapi.responses import JSONResponse
 
 # # Package # #
-from app.utils.errors import *
-from app.utils.logger import logger
+from core.errors import *
+from core.logger import logger
 
 
 __all__ = (

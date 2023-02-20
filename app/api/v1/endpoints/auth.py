@@ -15,11 +15,11 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # # Package # #
 from app import crud
-from app.utils.security import create_jwt_token, verify_jwt_token, create_cookie
-from app.utils.settings import settings
-from app.utils.logger import logger
-from app.utils.exceptions import ConflictException, NotFoundException, UnauthorizedException, BadRequestException
-from app.utils.constants import AMOUNT_OF_SESSSIONS_PER_USER
+from core.security import create_jwt_token, verify_jwt_token, create_cookie
+from core.settings import settings
+from core.logger import logger
+from core.exceptions import ConflictException, NotFoundException, UnauthorizedException, BadRequestException
+from core.constants import AMOUNT_OF_SESSSIONS_PER_USER
 from app.schemas.token import Token, RefreshToken
 from app.schemas.common import IPostResponseBase, IGetResponseBase
 from app.schemas.user import ICreate

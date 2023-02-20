@@ -11,9 +11,9 @@ from passlib.context import CryptContext
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
-from app.utils.settings import settings
-from app.utils.logger import logger
-from app.utils.exceptions import UnauthorizedException
+from core.settings import settings
+from core.logger import logger
+from core.exceptions import UnauthorizedException
 from app import crud
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

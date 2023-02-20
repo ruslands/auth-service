@@ -10,8 +10,8 @@ from sentry_sdk.integrations.logging import (
 )
 
 # # Package # #
-from app.utils.settings import settings
-from app.utils.logger import logger
+from core.settings import settings
+from core.logger import logger
 
 __all__ = (
     "sentry_init"

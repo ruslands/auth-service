@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 
 # # Package # #
-from app.utils.settings import settings
+from core.settings import settings
 from app.database.session import get_session
 from app.schemas.rbac import IRBACRead
 from app.schemas.rbac import IRBACValidateResponse, IRBACValidate

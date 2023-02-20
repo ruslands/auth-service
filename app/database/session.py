@@ -31,7 +31,12 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory() as session:
         yield session
         await session.commit()
-
+        # await session.close()
+        # try:
+        #     yield session
+        #     await session.commit()
+        # finally:
+        #     await session.close()
 
 async def get_session_with_bind() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_factory(bind=async_engine) as session:
