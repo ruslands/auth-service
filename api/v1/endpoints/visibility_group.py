@@ -11,7 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 from core.security import verify_jwt_token
 from core.settings import Params, Page, settings
 from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
-from app import User
+from app.model import User
 from core.base.schema import IDeleteResponseBase, IGetResponseBase, IPostResponseBase, IPutResponseBase
 from app.visibility_group.schema import *
 from app import crud

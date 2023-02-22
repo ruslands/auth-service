@@ -16,7 +16,7 @@ from app.user.schema import ICreate, IRead, IUpdate, IReadTemporary, IUserFilter
 from app.user.util import get_current_user
 from core.database.session import get_session
 from app import crud
-from app import User
+from app.model import User
 from core.base.schema import (
     IDeleteResponseBase,
     IGetResponseBase,

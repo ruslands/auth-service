@@ -4,7 +4,7 @@
 from sqladmin import ModelAdmin
 
 # # Package # #
-from app import User, Role, Sessions, Resource, Team, Visibility_Group
+from app.model import User, Role, Sessions, Resource, Team, Visibility_Group
 
 __all__ = (
     "UserAdmin",

@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends
 from core.settings import Params, Page
 from core.exceptions import NotFoundException
 from app import crud
-from app import User
+from app.model import User
 from app.sessions.schema import IRead
 from app.user.util import get_current_user
 from core.database.session import get_session

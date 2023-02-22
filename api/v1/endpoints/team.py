@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends
 # # Package # #
 from core.settings import Params, Page
 from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
-from app import User
+from app.model import User
 from core.base.schema import (
     IDeleteResponseBase,
     IGetResponseBase,
