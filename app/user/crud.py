@@ -15,7 +15,7 @@ from core.base.crud import CRUDBase
 from app.user.schema import ICreate, IUpdate
 from core.exceptions import BadRequestException, ConflictException
 from core.security import verify_password
-from app.user.model import User
+from app.user.model.user import User
 from app.role.model import Role
 from app.team.model import Team
 from app.visibility_group.model import Visibility_Group

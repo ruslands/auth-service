@@ -5,9 +5,9 @@ from typing import List, Optional
 from sqlmodel import SQLModel, Relationship, Field
 
 # # Package # #
-from app.models.base_uuid_model import BaseUUIDModel
-from app.models.links import LinkRoleUser
-from app.models.permission import Permission
+from core.base.model import BaseUUIDModel
+from app.user.model.links import LinkRoleUser
+from app.permission.model import Permission
 
 __all__ = (
     "Role",

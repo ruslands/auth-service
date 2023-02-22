@@ -14,7 +14,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from core.settings import settings
 from core.logger import logger
 from core.exceptions import UnauthorizedException
-from app import crud
+# from app import crud
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

@@ -11,7 +11,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 # # Package # #
 from core.settings import settings
 from core.security import verify_jwt_token
-from app.user.model import User
+from app.user.model.user import User
 from app import crud
 from core.exceptions import NotFoundException, UnauthorizedException, ConflictException, ForbiddenException
 from core.base.schema import IMetaGeneral

@@ -4,8 +4,8 @@ from uuid import UUID
 # # Installed # #
 
 # # Package # #
-from app.models.permission import PermissionBase
-from app.models.base_uuid_model import BaseUUIDModel
+from app.permission.model import PermissionBase
+from core.base.model import BaseUUIDModel
 
 
 __all__ = (

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 # # Package # #
 from app.sessions.model import SessionsBase
-from app.models.base_uuid_model import BaseUUIDModel
+from core.base.model import BaseUUIDModel
 
 __all__ = (
     "ICreate",

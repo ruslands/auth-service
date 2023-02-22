@@ -4,7 +4,7 @@
 from sqladmin import ModelAdmin
 
 # # Package # #
-from app.models import user, role, sessions, resource, team, visibility_group
+from app import User, Role, Sessions, Resource, Team, Visibility_Group
 
 __all__ = (
     "UserAdmin",
@@ -16,28 +16,28 @@ __all__ = (
 )
 
 
-class UserAdmin(ModelAdmin, model=user.User):
+class UserAdmin(ModelAdmin, model=User):
     name_plural = "Users"
     # column_exclude_list = form_excluded_columns = [
     #     User.title,
     # ]
 
 
-class RoleAdmin(ModelAdmin, model=role.Role):
+class RoleAdmin(ModelAdmin, model=Role):
     name_plural = "Roles"
 
 
-class SessionsAdmin(ModelAdmin, model=sessions.Sessions):
+class SessionsAdmin(ModelAdmin, model=Sessions):
     name_plural = "Sessions"
 
 
-class ResourceAdmin(ModelAdmin, model=resource.Resource):
+class ResourceAdmin(ModelAdmin, model=Resource):
     name_plural = "Resources"
 
 
-class TeamAdmin(ModelAdmin, model=team.Team):
+class TeamAdmin(ModelAdmin, model=Team):
     name_plural = "Teams"
 
 
-class VisibilityGroupAdmin(ModelAdmin, model=visibility_group.Visibility_Group):
+class VisibilityGroupAdmin(ModelAdmin, model=Visibility_Group):
     name_plural = "Visibility Groups"

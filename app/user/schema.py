@@ -7,12 +7,12 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, validator, root_validator
 
 # # Package # #
-from app.user.model import UserBase
+from app.user.model.user import UserBase
 from core.security import get_password_hash, create_password
-from .role import IRead
-from .team import IRead
-from .sessions import IRead
-from .visibility_group import IRead
+from app.role.schema import IRead
+from app.team.schema import IRead
+from app.sessions.schema import IRead
+from app.visibility_group.schema import IRead
 
 __all__ = (
     "ICreate",

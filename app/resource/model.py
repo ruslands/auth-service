@@ -5,8 +5,8 @@ from typing import List, Optional
 from sqlmodel import SQLModel, Relationship, Field
 
 # # Package # #
-from .permission import Permission
-from app.models.base_uuid_model import BaseUUIDModel
+from app.permission.model import Permission
+from core.base.model import BaseUUIDModel
 
 
 __all__ = (

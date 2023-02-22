@@ -9,7 +9,7 @@ from sqlalchemy.dialects import postgresql
 from sqlmodel import Field, Relationship, SQLModel, Column
 
 # # Package # #
-from app.models.base_uuid_model import BaseUUIDModel
+from core.base.model import BaseUUIDModel
 
 __all__ = (
     "Visibility_Group",

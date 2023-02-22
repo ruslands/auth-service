@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import async_scoped_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
-from app.database.database import async_engine
+from core.database.database import async_engine
 
 __all__ = (
     "get_session",

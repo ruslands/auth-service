@@ -5,9 +5,9 @@ from typing import List
 from pydantic import BaseModel, validator
 
 # # Package # #
-from app.user.model import UserBase
+from app.user.model.user import UserBase
 from app.team.model import TeamBase
-from app.models.base_uuid_model import BaseUUIDModel
+from core.base.model import BaseUUIDModel
 
 
 class IRead(TeamBase, BaseUUIDModel):

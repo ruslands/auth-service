@@ -13,7 +13,7 @@ from core.exceptions import AlreadyExistsException, NotFoundException, BadReques
 from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
-from app.user.model import User
+from app import User
 from app.role.schema import ICreate, IRead, IUpdate, IRead
 from core.base.schema import (
     IGetResponseBase,

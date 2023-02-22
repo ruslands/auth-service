@@ -11,7 +11,7 @@ from core.exceptions import AlreadyExistsException, NotFoundException
 from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
-from app.user.model import User
+from app import User
 from app.permission.schema import ICreate, IRead, IUpdate
 from core.base.schema import (
     IGetResponseBase,

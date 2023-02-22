@@ -6,7 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
 from app.resource.schema import ICreate, IUpdate
-from app.models.resource import Resource
+from app.resource.model import Resource
 from core.base.crud import CRUDBase
 from core.settings import settings
 

@@ -21,10 +21,10 @@ from core.logger import logger
 from core.exceptions import ConflictException, NotFoundException, UnauthorizedException, BadRequestException
 from core.constants import AMOUNT_OF_SESSSIONS_PER_USER
 from core.base.schema import IPostResponseBase, IGetResponseBase
-from app.user.model import User
+from app import User
 from app.user.util import get_current_user
 from app.user.schema import ICreate
-from app.token.schemas import Token, RefreshToken
+from app.token.schema import Token, RefreshToken
 from app.sessions.model import Sessions
 from app import crud
 

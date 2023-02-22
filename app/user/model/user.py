@@ -9,8 +9,8 @@ from sqlalchemy.dialects import postgresql
 from sqlmodel import Field, SQLModel, Relationship, Column
 
 # # Package # #
-from app.models.links import LinkRoleUser, LinkTeamUser
-from app.models.base_uuid_model import BaseUUIDModel
+from app.user.model.links import LinkRoleUser, LinkTeamUser
+from core.base.model import BaseUUIDModel
 
 
 __all__ = (

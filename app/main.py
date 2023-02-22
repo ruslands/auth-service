@@ -12,10 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 # # Package # #
-from core.rbac import RBAC
-from core.visibility_group import VisibilityGroup
-from app.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
-from app.database.database import async_engine, init_database
+from app.rbac.util import RBAC
+from app.visibility_group.util import VisibilityGroup
+from core.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
+from core.database.database import async_engine, init_database
 from api.v1.api import router
 from core.settings import settings
 from core.logger import logger

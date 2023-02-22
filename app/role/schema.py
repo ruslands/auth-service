@@ -7,7 +7,7 @@ from typing import Optional, List
 # # Package # #
 from app.role.model import RoleBase
 from app.resource.schema import IRead as ResourceRead
-from app.models.base_uuid_model import BaseUUIDModel
+from core.base.model import BaseUUIDModel
 
 
 class ICreate(RoleBase):

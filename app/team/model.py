@@ -5,8 +5,8 @@ from typing import List, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 # # Package # #
-from app.models.base_uuid_model import BaseUUIDModel
-from app.models.links import LinkTeamUser
+from core.base.model import BaseUUIDModel
+from app.user.model.links import LinkTeamUser
 
 __all__ = (
     "Team",
