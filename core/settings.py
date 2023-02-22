@@ -1,6 +1,7 @@
 # # Native # #
 import os
 import json
+from typing import Literal
 
 # # Installed # #
 from fastapi_pagination import Page, Params
@@ -23,7 +24,8 @@ Params.__fields__["size"].type_.le = 500
 
 
 class SecretsSettings(BaseSettings):
-    AUTH_SECRETS: str
+    SECRETS: str
+    SECRETS_PROVIDER: Literal['aws', 'yandex']
 
     class Config(BaseSettings.Config):
         # env_prefix = "AWS_"
@@ -32,7 +34,11 @@ class SecretsSettings(BaseSettings):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for key, value in get_secret_aws(self.AUTH_SECRETS).items():
+        if self.SECRETS_PROVIDER == 'yandex':
+            secrets = get_secret_yc(self.SECRETS)
+        elif self.SECRETS_PROVIDER == 'aws':
+            secrets = get_secret_aws(self.SECRETS)
+        for key, value in secrets.items():
             if key == "JWK":
                 value = jwk2pem(json.loads(value))
                 for k, v in value.items():
