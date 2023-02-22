@@ -45,13 +45,16 @@ class SecretsSettings(BaseSettings):
                     setattr(self, k, v)
             setattr(self, key, value)
         self.ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
-        self.ACCESS_TOKEN_EXPIRE_MINUTES = int(self.ACCESS_TOKEN_EXPIRE_MINUTES)
-        self.REFRESH_TOKEN_EXPIRE_MINUTES = int(self.REFRESH_TOKEN_EXPIRE_MINUTES)
-        self.REFRESH_TOKEN_TIMEOUT_MINUTES = int(self.REFRESH_TOKEN_TIMEOUT_MINUTES)
+        if hasattr(self, ACCESS_TOKEN_EXPIRE_MINUTES):
+            self.ACCESS_TOKEN_EXPIRE_MINUTES = int(self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        if hasattr(self, REFRESH_TOKEN_EXPIRE_MINUTES):
+            self.REFRESH_TOKEN_EXPIRE_MINUTES = int(self.REFRESH_TOKEN_EXPIRE_MINUTES)
+        if hasattr(self, REFRESH_TOKEN_TIMEOUT_MINUTES):
+            self.REFRESH_TOKEN_TIMEOUT_MINUTES = int(self.REFRESH_TOKEN_TIMEOUT_MINUTES)
 
 
 try:
     settings = SecretsSettings()
-    logger.debug(f"Settings: {settings}")
+    logger.debug(f"settings: {settings}")
 except ValidationError as e:
-    logger.error(f'Settings init error: {e}')
+    logger.error(f'settings fetch error: {e}')

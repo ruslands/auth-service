@@ -16,7 +16,7 @@ from core.rbac import RBAC
 from core.visibility_group import VisibilityGroup
 from app.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
 from app.database.database import async_engine, init_database
-from app.api.v1.api import router
+from api.v1.api import router
 from core.settings import settings
 from core.logger import logger
 from core.sentry import sentry_init
