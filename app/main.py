@@ -12,21 +12,30 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 # # Package # #
-from app.utils.rbac import RBAC
-from app.utils.visibility_group import VisibilityGroup
-from app.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
-from app.database.database import async_engine, init_database
-from app.api.v1.api import router
-from app.utils.settings import settings
-from app.utils.logger import logger
-from app.utils.sentry import sentry_init
-from app.utils.middleware import UserMiddleware
+from app.rbac.util import RBAC
+from app.visibility_group.util import VisibilityGroup
+from core.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
+from core.database.database import async_engine, init_database
+from api.v1.api import router
+from core.settings import settings
+from core.logger import logger
+from core.sentry import sentry_init
+from core.middleware import UserMiddleware
 
 sentry_init()
 
+
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url="/auth/openapi.json",
-    docs_url="/auth/docs", redoc_url="/auth/redoc"
+    title=settings.PROJECT_NAME, 
+    description='auth service',
+    version='1.0.0',
+    openapi_url="/auth/openapi.json",
+    openapi_tags=[{
+        'name': 'auth',
+        'description': 'authentication and authorisation',
+    }],
+    docs_url="/auth/docs", 
+    redoc_url="/auth/redoc"
 )
 
 app.include_router(router)

@@ -1,0 +1,10 @@
+{
+    "domain_main": "{{cookiecutter.project_slug}}.com",
+    "domain_staging": "stag.{{cookiecutter.domain_main}}",
+
+    "project_name": "auth service",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "project_short_description": "auth service",
+    "full_name": "Your fullname, example: Audrey Roy Greenfeld",
+    "version": "0.0.1"
+}
