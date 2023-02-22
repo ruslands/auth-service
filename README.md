@@ -345,6 +345,7 @@ image: public.ecr.aws/lambda/python:3.9
 public.ecr.aws/sam/build-python3.8:1.70.0-20230113014623
 
 ## ToDo
+[] Move crud from security
 [] add isort and other pre-commits <br/>
 [] changelog <br/>
 [] mkdocs <br/>
