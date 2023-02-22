@@ -11,14 +11,14 @@ from sqlmodel import select
 from sqlalchemy.exc import SQLAlchemyError
 
 # # Package # #
-from app.crud.base_sqlmodel import CRUDBase
+from core.base.crud import CRUDBase
 from app.user.schema import ICreate, IUpdate
 from core.exceptions import BadRequestException, ConflictException
 from core.security import verify_password
-from app.models.user import User
-from app.models.role import Role
-from app.models.team import Team
-from app.models.visibility_group import Visibility_Group
+from app.user.model import User
+from app.role.model import Role
+from app.team.model import Team
+from app.visibility_group.model import Visibility_Group
 
 __all__ = (
     "user",

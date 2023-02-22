@@ -6,9 +6,9 @@ from sqlmodel import select
 from sqlalchemy.orm import selectinload
 
 # # Package # #
-from app.schemas.visibility_group import ICreate, IUpdate
-from app.crud.base_sqlmodel import CRUDBase
-from app.models.visibility_group import Visibility_Group
+from app.visibility_group.schema import ICreate, IUpdate
+from core.base.crud import CRUDBase
+from app.visibility_group.model import Visibility_Group
 
 
 class CRUD(CRUDBase[Visibility_Group, ICreate, IUpdate]):

@@ -5,8 +5,8 @@ from typing import Optional, List
 # # Installed # #
 
 # # Package # #
-from app.models.role import RoleBase
-from app.schemas.resource import IRead as ResourceRead
+from app.role.model import RoleBase
+from app.resource.schema import IRead as ResourceRead
 from app.models.base_uuid_model import BaseUUIDModel
 
 

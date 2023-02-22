@@ -13,7 +13,7 @@ from core.settings import Params, Page
 from core.logger import logger
 from core.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
 from app.user.schema import ICreate, IRead, IUpdate, IReadTemporary, IUserFilter
-from app.database.user import get_current_user
+from app.user.util import get_current_user
 from core.database.session import get_session
 from app import crud
 from app.models import User

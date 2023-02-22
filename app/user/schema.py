@@ -7,7 +7,7 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, validator, root_validator
 
 # # Package # #
-from app.models.user import UserBase
+from app.user.model import UserBase
 from core.security import get_password_hash, create_password
 from .role import IRead
 from .team import IRead

@@ -6,11 +6,9 @@ from fastapi.security import OAuth2PasswordBearer
 # # Package # #
 from core.settings import settings
 from core.database.session import get_session
-from app.schemas.rbac import IRBACRead
-from app.schemas.rbac import IRBACValidateResponse, IRBACValidate
-from core.base.schema import (
-    IGetResponseBase,
-)
+from app.rbac.schema import IRBACRead
+from app.rbac.schema import IRBACValidateResponse, IRBACValidate
+from core.base.schema import IGetResponseBase
 
 router = APIRouter()
 

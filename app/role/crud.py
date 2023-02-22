@@ -5,9 +5,9 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 
 # # Package # #
-from app.schemas.role import ICreate, IUpdate
-from app.models.role import Role
-from app.crud.base_sqlmodel import CRUDBase
+from app.role.schema import ICreate, IUpdate
+from app.role.model import Role
+from core.base.crud import CRUDBase
 
 
 class CRUD(CRUDBase[Role, ICreate, IUpdate]):

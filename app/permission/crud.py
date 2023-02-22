@@ -1,8 +1,8 @@
 from sqlmodel import select, and_
 from uuid import UUID
 from app.models.permission import Permission
-from app.schemas.permission import ICreate, IUpdate
-from app.crud.base_sqlmodel import CRUDBase
+from app.permission.schema import ICreate, IUpdate
+from core.base.crud import CRUDBase
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 

@@ -21,14 +21,12 @@ from core.logger import logger
 from core.exceptions import ConflictException, NotFoundException, UnauthorizedException, BadRequestException
 from core.constants import AMOUNT_OF_SESSSIONS_PER_USER
 from core.base.schema import IPostResponseBase, IGetResponseBase
-
-from app.sessions.model import Sessions
 from app.user.model import User
-from app.token.schemas import Token, RefreshToken
+from app.user.util import get_current_user
 from app.user.schema import ICreate
-
+from app.token.schemas import Token, RefreshToken
+from app.sessions.model import Sessions
 from app import crud
-from app.database.user import get_current_user
 
 
 router = APIRouter()

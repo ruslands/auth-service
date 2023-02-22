@@ -5,9 +5,9 @@ from sqlmodel import select, and_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
-from app.schemas.resource import ICreate, IUpdate
+from app.resource.schema import ICreate, IUpdate
 from app.models.resource import Resource
-from app.crud.base_sqlmodel import CRUDBase
+from core.base.crud import CRUDBase
 from core.settings import settings
 
 

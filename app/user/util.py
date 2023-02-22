@@ -11,11 +11,11 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 # # Package # #
 from core.settings import settings
 from core.security import verify_jwt_token
-from app.models.user import User
+from app.user.model import User
 from app import crud
 from core.exceptions import NotFoundException, UnauthorizedException, ConflictException, ForbiddenException
 from core.base.schema import IMetaGeneral
-from app.schemas.rbac import IRBACValidate
+from app.rbac.schema import IRBACValidate
 from core.database.session import get_session
 
 __all__ = (

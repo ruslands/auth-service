@@ -12,7 +12,7 @@ from core.security import verify_jwt_token
 from core.logger import logger
 from core.settings import settings
 from core.exceptions import ConflictException
-from app.schemas.visibility_group import *
+from app.visibility_group.schema import *
 
 __all__ = (
     "VisibilityGroup",

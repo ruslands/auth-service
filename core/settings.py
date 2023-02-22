@@ -34,6 +34,7 @@ class SecretsSettings(BaseSettings):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
         if self.SECRETS_PROVIDER == 'yandex':
             secrets = get_secret_yc(self.SECRETS)
         elif self.SECRETS_PROVIDER == 'aws':
@@ -43,14 +44,9 @@ class SecretsSettings(BaseSettings):
                 value = jwk2pem(json.loads(value))
                 for k, v in value.items():
                     setattr(self, k, v)
+            if key in ["ACCESS_TOKEN_EXPIRE_MINUTES", "REFRESH_TOKEN_EXPIRE_MINUTES", "REFRESH_TOKEN_TIMEOUT_MINUTES"]:
+                value = int(value)
             setattr(self, key, value)
-        self.ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
-        if hasattr(self, ACCESS_TOKEN_EXPIRE_MINUTES):
-            self.ACCESS_TOKEN_EXPIRE_MINUTES = int(self.ACCESS_TOKEN_EXPIRE_MINUTES)
-        if hasattr(self, REFRESH_TOKEN_EXPIRE_MINUTES):
-            self.REFRESH_TOKEN_EXPIRE_MINUTES = int(self.REFRESH_TOKEN_EXPIRE_MINUTES)
-        if hasattr(self, REFRESH_TOKEN_TIMEOUT_MINUTES):
-            self.REFRESH_TOKEN_TIMEOUT_MINUTES = int(self.REFRESH_TOKEN_TIMEOUT_MINUTES)
 
 
 try:

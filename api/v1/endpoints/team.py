@@ -9,16 +9,16 @@ from fastapi import APIRouter, Depends
 # # Package # #
 from core.settings import Params, Page
 from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
-from app.models.user import User
+from app.user.model import User
 from core.base.schema import (
     IDeleteResponseBase,
     IGetResponseBase,
     IPostResponseBase,
     IPutResponseBase,
 )
-from app.schemas.team import ICreate, IRead, IRead, IUpdate
+from app.team.schema import ICreate, IRead, IRead, IUpdate
 from app import crud
-from app.database.user import get_current_user
+from app.user.util import get_current_user
 from core.database.session import get_session
 
 router = APIRouter()

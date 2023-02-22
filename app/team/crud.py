@@ -5,9 +5,9 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 
 # # Package # #
-from app.schemas.team import ICreate, IUpdate
-from app.crud.base_sqlmodel import CRUDBase
-from app.models.team import Team
+from app.team.schema import ICreate, IUpdate
+from core.base.crud import CRUDBase
+from app.team.model import Team
 
 
 class CRUD(CRUDBase[Team, ICreate, IUpdate]):

@@ -6,7 +6,7 @@ from pydantic.generics import GenericModel
 from pydantic import BaseModel
 
 # # Package # #
-from app.schemas.role import IRead
+from app.role.schema import IRead
 
 __all__ = (
     "IGetResponseBase",

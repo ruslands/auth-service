@@ -7,7 +7,7 @@ from uuid import UUID
 from pydantic import BaseModel, validator
 
 # # Package # #
-from app.models.visibility_group import VisibilityGroupBase
+from app.visibility_group.model import VisibilityGroupBase
 from app.models.base_uuid_model import BaseUUIDModel
 from core.constants import VISIBILITY_GROUP_ENTITY_SETTINGS
 

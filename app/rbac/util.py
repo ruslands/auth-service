@@ -11,7 +11,7 @@ from app import crud
 from core.security import verify_jwt_token
 from core.settings import settings
 from core.logger import logger
-from app.schemas.rbac import IRBACValidate, IRBACValidateResponse
+from app.rbac.schema import IRBACValidate, IRBACValidateResponse
 
 __all__ = (
     "RBAC",

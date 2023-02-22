@@ -11,11 +11,11 @@ from fastapi.security import OAuth2PasswordBearer
 from core.security import verify_jwt_token
 from core.settings import Params, Page, settings
 from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
-from app.models.user import User
+from app.user.model import User
 from core.base.schema import IDeleteResponseBase, IGetResponseBase, IPostResponseBase, IPutResponseBase
-from app.schemas.visibility_group import *
+from app.visibility_group.schema import *
 from app import crud
-from app.database.user import get_current_user
+from app.user.util import get_current_user
 from core.database.session import get_session
 from core.logger import logger
 from core.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES

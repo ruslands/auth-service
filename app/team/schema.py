@@ -5,8 +5,8 @@ from typing import List
 from pydantic import BaseModel, validator
 
 # # Package # #
-from app.models.user import UserBase
-from app.models.team import TeamBase
+from app.user.model import UserBase
+from app.team.model import TeamBase
 from app.models.base_uuid_model import BaseUUIDModel
 
 

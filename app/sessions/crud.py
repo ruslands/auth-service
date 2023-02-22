@@ -5,8 +5,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 
 # # Package # #
-from app.schemas.sessions import ICreate, IUpdate
-from app.crud.base_sqlmodel import CRUDBase
+from app.sessions.schema import ICreate, IUpdate
+from core.base.crud import CRUDBase
 from app.sessions.model import Sessions
 
 
