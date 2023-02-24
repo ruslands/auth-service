@@ -50,6 +50,7 @@ class ICreate(BaseModel):
     region: Optional[List]
     picture: Optional[AnyHttpUrl]
 
+
     @validator('email', 'country', 'city')
     def str_attr_must_be_lower(cls, v):
         return v.lower().strip()
@@ -131,3 +132,4 @@ class IUpdate(BaseModel):
     allow_basic_login: Optional[bool]
     country_code: Optional[str]
     phone_confirmation_code: Optional[str]
+
