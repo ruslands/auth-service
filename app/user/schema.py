@@ -4,11 +4,12 @@ from uuid import UUID
 from datetime import datetime
 
 # # Installed # #
-from pydantic import BaseModel, EmailStr, validator, root_validator
+from pydantic import BaseModel, EmailStr, validator, root_validator, AnyHttpUrl
 
 # # Package # #
 from app.user.model.user import UserBase
 from core.security import get_password_hash, create_password
+from app.utils.logger import logger
 from app.role.schema import IRead
 from app.team.schema import IRead
 from app.sessions.schema import IRead
@@ -47,6 +48,8 @@ class ICreate(BaseModel):
     city: Optional[str]
     title: Optional[str]
     region: Optional[List]
+    picture: Optional[AnyHttpUrl]
+
 
     @validator('email', 'country', 'city')
     def str_attr_must_be_lower(cls, v):
@@ -55,6 +58,8 @@ class ICreate(BaseModel):
     @root_validator
     def create_password(cls, values):
         values["password"] = create_password()
+        logger.debug(f"Created password for user {values['email']}: {values['password']}")
+        values["allow_basic_login"] = True
         return values
 
     @root_validator
@@ -125,3 +130,6 @@ class IUpdate(BaseModel):
     is_staff: Optional[bool]
     is_superuser: Optional[bool]
     allow_basic_login: Optional[bool]
+    country_code: Optional[str]
+    phone_confirmation_code: Optional[str]
+

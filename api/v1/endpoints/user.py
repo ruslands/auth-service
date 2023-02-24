@@ -4,6 +4,7 @@ from uuid import UUID
 from typing import Union, Dict, Any, List
 
 # # Installed # #
+import sqlalchemy
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 from fastapi import APIRouter, Depends
@@ -162,11 +163,10 @@ async def delete(
 ):
     if current_user.id == user_id:
         raise BadRequestException(detail="You cannot delete yourself")
-
-    user = await crud.user.get(db_session=db_session, id=user_id)
-    if not user:
-        raise NotFoundException
-    user = await crud.user.remove(db_session, id=user_id)
+    try:
+        user = await crud.user.remove(db_session, id=user_id)
+    except sqlalchemy.exc.IntegrityError as e:
+        raise BadRequestException(detail=f"user delete failed: {e}")
     return IDeleteResponseBase[IRead](
         data=user
     )
@@ -174,9 +174,20 @@ async def delete(
 
 @router.get("/user", response_model=IGetResponseBase[IRead])
 async def get_my_data(
-    current_user: User = Depends(get_current_user()),
+    user: User = Depends(get_current_user()),
 ):
-    # TODO: assign applications to user based on region or role
-    # TODO: not to return sensitive data
-    current_user.applications = ['delorean', 'cms', 'crme', 'kops', 'jorge/inbound', 'jorge']
-    return IGetResponseBase[IRead](data=current_user)
+    return IGetResponseBase[IRead](data=user)
+
+
+@router.delete("/user", response_model=IGetResponseBase[IRead])
+async def delete_my_data(
+    db_session: AsyncSession = Depends(get_session),
+    user: User = Depends(get_current_user()),
+):
+    try:
+        user = await crud.user.remove(db_session, id=user.id)
+    except sqlalchemy.exc.IntegrityError as e:
+        raise BadRequestException(detail=f"user delete failed: {e}")
+    return IDeleteResponseBase[IRead](
+        data=user
+    )
