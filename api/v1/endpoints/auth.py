@@ -109,7 +109,8 @@ async def basic(
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "roles": [i.name for i in user.roles]
+        "roles": [i.name for i in user.roles],
+        "picture": user.picture
     }
     if user.sessions:
         for i in user.sessions:
@@ -245,6 +246,7 @@ async def google_callback(
         "last_name": user.last_name,
         "email": user.email,
         "roles": [i.name for i in user.roles],
+        "picture": user.picture
     }
     if user.sessions:
         for i in user.sessions:
@@ -315,6 +317,7 @@ async def refresh_token(
         "last_name": user.last_name,
         "email": user.email,
         "roles": [i.name for i in user.roles],
+        "picture": user.picture
     }
     cookie = request.cookies.get("auth")
     for s in user.sessions:

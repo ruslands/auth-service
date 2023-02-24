@@ -33,7 +33,8 @@ class UserBase(SQLModel):
     country: Optional[str]
     aliases: Optional[Set[str]] = Field(
         default=None, sa_column=Column(postgresql.ARRAY(String())))
-
+    picture: Optional[str]
+    
     class Config:
         extra = 'allow'
 

@@ -4,7 +4,7 @@ from uuid import UUID
 from datetime import datetime
 
 # # Installed # #
-from pydantic import BaseModel, EmailStr, validator, root_validator
+from pydantic import BaseModel, EmailStr, validator, root_validator, AnyHttpUrl
 
 # # Package # #
 from app.user.model.user import UserBase
@@ -47,6 +47,7 @@ class ICreate(BaseModel):
     city: Optional[str]
     title: Optional[str]
     region: Optional[List]
+    picture: Optional[AnyHttpUrl]
 
     @validator('email', 'country', 'city')
     def str_attr_must_be_lower(cls, v):
