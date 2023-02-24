@@ -104,7 +104,8 @@ async def basic(
         expires_at=expires_at,
         cookie=cookie
     )
-    meta_data = {
+    meta = {
+        "id": str(user.id),
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
@@ -120,7 +121,7 @@ async def basic(
             oldest_session = sorted(user.sessions, key=lambda x: x.created_at)[0]
             await crud.sessions.remove(db_session, id=oldest_session.id)
     await crud.sessions.create(db_session, obj_in=new_session)
-    return IPostResponseBase[Token](meta=meta_data, data=data, message="Login correctly")
+    return IPostResponseBase[Token](meta=meta, data=data, message="Login correctly")
 
 
 @router.get("/auth/google", status_code=303)
@@ -241,6 +242,7 @@ async def google_callback(
         cookie=cookie,
     )
     meta = {
+        "id": str(user.id),
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
@@ -312,6 +314,7 @@ async def refresh_token(
         refresh_token=body.refresh_token
     )
     meta = {
+        "id": str(user.id),
         "full_name": user.full_name,
         "first_name": user.first_name,
         "last_name": user.last_name,
