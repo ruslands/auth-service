@@ -9,7 +9,7 @@ from pydantic import BaseModel, EmailStr, validator, root_validator, AnyHttpUrl
 # # Package # #
 from app.user.model.user import UserBase
 from core.security import get_password_hash, create_password
-from app.utils.logger import logger
+from core.logger import logger
 from app.role.schema import IRead
 from app.team.schema import IRead
 from app.sessions.schema import IRead
