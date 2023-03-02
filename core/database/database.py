@@ -29,6 +29,7 @@ async_engine = create_async_engine(
     echo=False,
     future=True,
     poolclass=NullPool,
+    connect_args={'timeout': 5}
 )
 
 async def init_database():
