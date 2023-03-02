@@ -29,10 +29,11 @@ async_engine = create_async_engine(
     echo=False,
     future=True,
     poolclass=NullPool,
+    connect_args={'timeout': 5}
 )
 
 async def init_database():
     async with async_engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.drop_all)
+        # await conn.run_sync(SQLModel.metadata.drop_all)
         await conn.run_sync(SQLModel.metadata.create_all)
     ...

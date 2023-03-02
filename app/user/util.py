@@ -41,7 +41,7 @@ def get_current_user(required_permissions: Optional[bool] = None) -> User:
             db_session: AsyncSession = Depends(get_session),
             access_token: str = Depends(reusable_oauth2)
     ) -> User:
-        payload = await verify_jwt_token(token=access_token, type="access", db_session=db_session)
+        payload = await verify_jwt_token(token=access_token, type="access", db_session=db_session, crud=crud)
 
         user = await crud.user.get(db_session, id=payload["user_id"])
         if not user:

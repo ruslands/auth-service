@@ -42,7 +42,7 @@ def create_jwt_token(
     return encoded_jwt, expire
 
 
-async def verify_jwt_token(token: str, type: str, db_session: AsyncSession) -> dict:
+async def verify_jwt_token(token: str, type: str, db_session: AsyncSession, crud) -> dict:
     try:
         payload = jwt.decode(token, settings.PEM_PUBLIC_KEY,
                              algorithms=["RS256"], options={"verify_exp": True})

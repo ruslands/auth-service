@@ -83,7 +83,7 @@ class RBAC:
         access_token: str,
     ) -> IRBACValidateResponse:
         logger.debug(f"validate request: {req}")
-        payload = await verify_jwt_token(token=access_token, type="access", db_session=db_session)
+        payload = await verify_jwt_token(token=access_token, type="access", db_session=db_session, crud=crud)
         self.rbac = await self.get(db_session)
         response = {
             "access": True,

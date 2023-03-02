@@ -285,7 +285,7 @@ async def refresh_token(
     """
     Get Refresh token
     """
-    payload = await verify_jwt_token(token=body.refresh_token, type="refresh", db_session=db_session)
+    payload = await verify_jwt_token(token=body.refresh_token, type="refresh", db_session=db_session, crud=crud)
     try:
         user = await crud.user.get(db_session, id=payload['user_id'])
     except Exception as e:

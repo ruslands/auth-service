@@ -67,7 +67,7 @@ class VisibilityGroup:
             "users": []
         }
 
-        payload = await verify_jwt_token(token=access_token, type='access', db_session=db_session)
+        payload = await verify_jwt_token(token=access_token, type='access', db_session=db_session, crud=crud)
         if payload['visibility_group'] is None:
             raise ConflictException(detail="User has no visibility_group")
 

@@ -67,7 +67,7 @@ async def validate(
         access_token=access_token
     )
 
-    meta = await verify_jwt_token(token=access_token, type="access", db_session=db_session)
+    meta = await verify_jwt_token(token=access_token, type="access", db_session=db_session, crud=crud)
 
     return IGetResponseBase[IVisibilityGroupValidateResponse](meta=meta, data=data)
 
