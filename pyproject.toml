@@ -12,8 +12,7 @@ fastapi-sso = "^0.6.2"
 pydantic = {extras = ["email"], version = "^1.9.1"}
 httpx = "^0.23.0"
 requests = "^2.28.1"
-sqlalchemy = "1.4.35"
-sqlmodel = "^0.0.6"
+sqlmodel = "^0.0.8"
 sqladmin = "^0.1.11"
 PyJWT = {extras = ["crypto"], version = "^2.4.0"}
 alembic = "^1.8.0"

@@ -14,7 +14,7 @@ __all__ = (
 
 
 def get_secret(secret_name):
-    IAM_TOKEN = "t1.9euelZrIjJKOiszKkZCcnJaMjp7Mku3rnpWals6Yy5CTycjNlozOlcjIkonl9Pc-OH5f-e8rR1H13fT3fmZ7X_nvK0dR9Q.nQxDXho3ynytIbRn_wYjU6kkz6AgMFxRxJk7jcFHSwY7YYgP3py3RdTdbPR0PDZV6g4aB_caCfflXreykUHfDQ"
+    IAM_TOKEN = "t1.9euelZqYjJCQkJjJkcaanMuNm5yVye3rnpWals6Yy5CTycjNlozOlcjIkonl8_cIaHhf-e8hOS51_t3z90gWdl_57yE5LnX-.45t1kpIkTrVlM_UZVPO6aXkpWt2nxsZwto5CLEbggt1uTpfy016SqRtXCgAjhEqbWekNcFa8CC-LCWPa8uqmAw"
     try:
         response = httpx.get(
             secret_name,
