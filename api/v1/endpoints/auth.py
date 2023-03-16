@@ -33,6 +33,15 @@ from app import crud
 
 router = APIRouter()
 
+# TODO надо добавить в секреты Yandex и сделать через settings
+keycloak_config = {
+    "server_url": "https://<your-keycloak-url>/auth/",
+    "realm_name": "<your-realm-name>",
+    "client_id": "<your-client-id>",
+    "client_secret": "<your-client-secret>",
+    "verify": True,  # Set to False if you want to disable SSL verification
+}
+
 google_sso = GoogleSSO(
     client_id=settings.GOOGLE_CLIENT_ID,
     client_secret=settings.GOOGLE_CLIENT_SECRET,
