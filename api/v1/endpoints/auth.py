@@ -351,6 +351,37 @@ async def refresh_token(
     raise UnauthorizedException(detail="The session does not exist")
 
 
+@router.get("/auth/logout", response_model=IGetResponseBase, responses={
+    401: {
+        "content": {"application/json": {"example": {"detail": "The session does not exist"}}},
+        "description": "If user can't be authenticated",
+    },
+    403: {
+        "content": {"application/json": {"example": {"detail": "User does not have permission"}}},
+        "description": "If user authenticated but not authorized",
+    },
+    404: {
+        "content": {"application/json": {"example": {"detail": "Not found"}}},
+        "description": "Not found",
+    },
+    409: {
+        "content": {"application/json": {"example": {"detail": "Conflict"}}},
+        "description": "Conflict",
+    }
+})
+async def logout(
+    request: Request,
+    db_session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user()),
+    access_token: str = Depends(reusable_oauth2)
+):
+    if current_user.sessions:
+        for i in current_user.sessions:
+            if i.cookie == request.cookies.get("auth") or i.access_token == access_token:
+                await crud.sessions.remove(db_session, id=i.id)
+    return IGetResponseBase(data={})
+
+
 async def get_keycloak_user(token: str) -> dict:
     try:
         userinfo_url = f"{keycloak_config['server_url']}realms/{keycloak_config['realm_name']}/protocol/openid-connect/userinfo"
