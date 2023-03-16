@@ -10,6 +10,9 @@ from fastapi import APIRouter, Body, Depends, Request, Header, Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi_sso.sso.google import GoogleSSO
 from sqlmodel.ext.asyncio.session import AsyncSession
+import requests
+from fastapi import Depends, HTTPException
+from starlette.status import HTTP_401_UNAUTHORIZED
 from pydantic.networks import AnyHttpUrl
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -27,7 +30,6 @@ from app.user.schema import ICreate
 from app.token.schema import Token, RefreshToken
 from app.sessions.model import Sessions
 from app import crud
-
 
 router = APIRouter()
 
@@ -47,11 +49,11 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 @router.post("/auth/basic", response_model=IPostResponseBase[Token], status_code=201,
              responses={
-    409: {
-        "content": {"application/json": {"example": {"detail": "User is disabled"}}},
-        "description": "Additional information about the error",
-    }
-})
+                 409: {
+                     "content": {"application/json": {"example": {"detail": "User is disabled"}}},
+                     "description": "Additional information about the error",
+                 }
+             })
 async def basic(
     response: Response,
     request: Request,
@@ -207,7 +209,6 @@ async def google_callback(
     roles = {str(i.id): i.name for i in user.roles}
     teams = [str(i.id) for i in user.teams]
 
-
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token, expires_at = create_jwt_token({
@@ -263,19 +264,19 @@ async def google_callback(
 
 @router.post("/auth/refresh-token", response_model=IPostResponseBase[Token],
              response_model_exclude_none=True, status_code=201, responses={
-    401: {
-        "content": {"application/json": {"example": {"detail": "The session does not exist"}}},
-        "description": "If user can't be authenticated",
-    },
-    404: {
-        "content": {"application/json": {"example": {"detail": "Not found"}}},
-        "description": "Not found",
-    },
-    409: {
-        "content": {"application/json": {"example": {"detail": "Conflict"}}},
-        "description": "Conflict",
-    }
-})
+        401: {
+            "content": {"application/json": {"example": {"detail": "The session does not exist"}}},
+            "description": "If user can't be authenticated",
+        },
+        404: {
+            "content": {"application/json": {"example": {"detail": "Not found"}}},
+            "description": "Not found",
+        },
+        409: {
+            "content": {"application/json": {"example": {"detail": "Conflict"}}},
+            "description": "Conflict",
+        }
+    })
 async def refresh_token(
     request: Request,
     response: Response,
@@ -341,32 +342,101 @@ async def refresh_token(
     raise UnauthorizedException(detail="The session does not exist")
 
 
-@router.get("/auth/logout", response_model=IGetResponseBase, responses={
-    401: {
-        "content": {"application/json": {"example": {"detail": "The session does not exist"}}},
-        "description": "If user can't be authenticated",
-    },
-    403: {
-        "content": {"application/json": {"example": {"detail": "User does not have permission"}}},
-        "description": "If user authenticated but not authorized",
-    },
-    404: {
-        "content": {"application/json": {"example": {"detail": "Not found"}}},
-        "description": "Not found",
-    },
-    409: {
-        "content": {"application/json": {"example": {"detail": "Conflict"}}},
-        "description": "Conflict",
-    }
-})
-async def logout(
+async def get_keycloak_user(token: str) -> dict:
+    try:
+        userinfo_url = f"{keycloak_config['server_url']}realms/{keycloak_config['realm_name']}/protocol/openid-connect/userinfo"
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(userinfo_url, headers=headers, verify=keycloak_config['verify'])
+
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Invalid Keycloak token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        return response.json()
+    except Exception as e:
+        raise HTTPException(
+            status_code=HTTP_401_UNAUTHORIZED,
+            detail="Invalid Keycloak token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@router.get("/auth/keycloak", response_model=IGetResponseBase)
+async def keycloak_auth(
     request: Request,
-    db_session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user()),
-    access_token: str = Depends(reusable_oauth2)
+    response: Response,
+    token: str = Depends(get_keycloak_user),
+    db_session: AsyncSession = Depends(get_session)
 ):
-    if current_user.sessions:
-        for i in current_user.sessions:
-            if i.cookie == request.cookies.get("auth") or i.access_token == access_token:
+    user_info = await get_keycloak_user(token)
+    email = user_info.get("email")
+    first_name = user_info.get("given_name")
+    last_name = user_info.get("family_name")
+    picture = user_info.get("picture")
+
+    user = await crud.user.get_by_email(db_session, email=email)
+
+    if not user:
+        new_user = ICreate(email=email, first_name=first_name, last_name=last_name, picture=picture)
+        user = await crud.user.create(db_session, obj_in=new_user)
+
+    if not user.is_active:
+        raise ConflictException(detail="User is disabled")
+
+    roles = {str(i.id): i.name for i in user.roles}
+    teams = [str(i.id) for i in user.teams]
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+
+    access_token, expires_at = create_jwt_token({
+        "user_id": str(user.id),
+        "email": user.email,
+        "roles": roles,
+        "teams": teams,
+        "visibility_group": user.visibility_group.prefix if user.visibility_group else None
+    }, expires_delta=access_token_expires, type="access")
+    refresh_token, _ = create_jwt_token({
+        "user_id": str(user.id)
+    }, expires_delta=refresh_token_expires, type="refresh")
+
+    cookie = request.cookies.get("auth")
+    if not cookie:
+        cookie = create_cookie()
+        response.set_cookie(key="auth", value=cookie, httponly=True, secure=True)
+
+    data = Token(
+        access_token=access_token,
+        token_type="bearer",
+        refresh_token=refresh_token,
+        refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
+        expires_at=expires_at,
+        cookie=cookie
+    )
+    new_session = Sessions(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        user_id=user.id,
+        expires_at=expires_at,
+        cookie=cookie
+    )
+    meta = {
+        "id": str(user.id),
+        "full_name": user.full_name,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "roles": [i.name for i in user.roles],
+        "picture": user.picture
+    }
+    if user.sessions:
+        for i in user.sessions:
+            if i.cookie == cookie:
                 await crud.sessions.remove(db_session, id=i.id)
-    return IGetResponseBase(data={})
+        if len(user.sessions) >= AMOUNT_OF_SESSSIONS_PER_USER:
+            oldest_session = sorted(user.sessions, key=lambda x: x.created_at)[0]
+            await crud.sessions.remove(db_session, id=oldest_session.id)
+    await crud.sessions.create(db_session, obj_in=new_session)
+    return IGetResponseBase(meta=meta, data=data, message="Login correctly")
