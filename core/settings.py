@@ -44,7 +44,7 @@ class SecretsSettings(BaseSettings):
                 value = jwk2pem(json.loads(value))
                 for k, v in value.items():
                     setattr(self, k, v)
-            if key in ["ACCESS_TOKEN_EXPIRE_MINUTES", "REFRESH_TOKEN_EXPIRE_MINUTES", "REFRESH_TOKEN_TIMEOUT_MINUTES"]:
+            if key in ["ACCESS_TOKEN_EXPIRE_MINUTES", "REFRESH_TOKEN_EXPIRE_MINUTES"]:
                 value = int(value)
             setattr(self, key, value)
 

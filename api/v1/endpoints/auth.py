@@ -93,7 +93,6 @@ async def basic(
         access_token=access_token,
         token_type="bearer",
         refresh_token=refresh_token,
-        refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         expires_at=expires_at,
         cookie=cookie
     )
@@ -230,7 +229,6 @@ async def google_callback(
         access_token=access_token,
         token_type="bearer",
         refresh_token=refresh_token,
-        refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         expires_at=expires_at,
         cookie=cookie,
     )
@@ -310,7 +308,6 @@ async def refresh_token(
         access_token=access_token,
         token_type="bearer",
         expires_at=expires_at,
-        refresh_token_timeout=settings.REFRESH_TOKEN_TIMEOUT_MINUTES * 60,
         refresh_token=body.refresh_token
     )
     meta = {

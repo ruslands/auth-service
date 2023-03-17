@@ -12,7 +12,6 @@ class Token(BaseModel):
     expires_at: int  # Unix timestamp in seconds
     token_type: str
     refresh_token: Optional[str]
-    refresh_token_timeout: int = 600  # Seconds
 
 
 class RefreshToken(BaseModel):
