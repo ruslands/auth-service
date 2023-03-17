@@ -12,11 +12,25 @@ __all__ = (
     "get_secret",
 )
 
-IAM_TOKEN = "t1.9euelZqJkoucnpiXipSPzZbLkc6Yie3rnpWals6Yy5CTycjNlozOlcjIkonl8_dCOyhg-e8REz1r_d3z9wJqJWD57xETPWv9.399ifZ20AwuhNZSlQteoutvwtv1lzMyA6mR0nhPH0El9-HaAArhD2JHQQoi12O_kgeTLgCwSSoWnG-_h1jxtDw"
+OAUTH_TOKEN = "<OAuth-token>"
 FOLDER_ID = "folder_id"
 
 
-def get_secret_id_by_name(secret_name, folder_id):
+def get_iam_token(oauth_token):
+    iam_url = "https://iam.api.cloud.yandex.net/iam/v1/tokens"
+    headers = {"Content-Type": "application/json"}
+    data = {"yandexPassportOauthToken": oauth_token}
+
+    try:
+        response = httpx.post(iam_url, headers=headers, json=data)
+        response.raise_for_status()
+        iam_data = response.json()
+        return iam_data["iamToken"]
+    except Exception as e:
+        raise e
+
+
+def get_secret_id_by_name(secret_name, folder_id, IAM_TOKEN):
     secrets_url = f"https://lockbox.api.cloud.yandex.net/lockbox/v1/secrets"
     params = {"folderId": folder_id}
     headers = {"Authorization": f"Bearer {IAM_TOKEN}"}
@@ -37,7 +51,8 @@ def get_secret_id_by_name(secret_name, folder_id):
 
 
 def get_secret(secret_name):
-    secret_id = get_secret_id_by_name(secret_name, FOLDER_ID)
+    IAM_TOKEN = get_iam_token(OAUTH_TOKEN)
+    secret_id = get_secret_id_by_name(secret_name, FOLDER_ID, IAM_TOKEN)
 
     if not secret_id:
         raise ValueError(f"Secret with name '{secret_name}' not found.")
