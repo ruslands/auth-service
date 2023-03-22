@@ -33,6 +33,7 @@ bcrypt = "^4.0.0"
 psycopg2-binary = "^2.9.3"
 mkdocs = "^1.4.2"
 Jinja2 = "3.0.0"
+yandexcloud = "^0.205.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "0.931"
