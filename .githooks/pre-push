@@ -1,3 +1,5 @@
 #!/bin/sh
 set -e
-poetry run poe flake8
+make lint
+make test
+# poetry run poe flake8

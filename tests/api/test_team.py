@@ -1,28 +1,56 @@
-import json
 import pytest
+import random
+import string
+from tests.api.test_auth import Test as TestAuth
 
 
-@pytest.mark.usefixtures("test_client", "test_basic", "test_create_team")
-class TestTeam:
+@pytest.mark.usefixtures("test_client")
+class Test:
+    url = "api/auth/v1/team"
+    auth = TestAuth()
 
-    def test_get_teams_list(self, test_client):
-        response = test_client.get("/api/auth/v1/team/list?page=1&size=100",
-                                   headers={"Authorization": f"Bearer {pytest.test_token}"})
+    @classmethod
+    def create_object(cls):
+        return {
+            "title": ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+        }
+
+    @pytest.mark.asyncio
+    async def test_create(self, test_client):
+        data = self.create_object()
+        await self.auth.test_basic(test_client=test_client)
+        response = test_client.post(
+            self.url, headers={"Authorization": f"Bearer {pytest.test_token}"}, json=data)
         assert response.status_code == 200
+        pytest.test_team_id = response.json()["data"]["id"]
 
-    def test_get_team_by_id(self, test_client):
+    @pytest.mark.asyncio
+    async def test_get_list(self, test_client):
         response = test_client.get(
-            f"/api/auth/v1/team/{pytest.test_team_id}", headers={"Authorization": f"Bearer {pytest.test_token}"})
+            f"{self.url}/list?page=1&size=100",
+            headers={"Authorization": f"Bearer {pytest.test_token}"})
         assert response.status_code == 200
 
-    def test_update_team(self, test_client):
-        response = test_client.patch(f"/api/auth/v1/team/{pytest.test_team_id}",
-                                     headers={"Authorization": f"Bearer {pytest.test_token}"},
-                                     data=json.dumps({"name": "test team test"}))
+    @pytest.mark.asyncio
+    async def test_get(self, test_client):
+        response = test_client.get(
+            f"{self.url}/{pytest.test_team_id}",
+            headers={"Authorization": f"Bearer {pytest.test_token}"}
+        )
         assert response.status_code == 200
 
-    def test_delete_team(self, test_client):
+    @pytest.mark.asyncio
+    async def test_update(self, test_client):
+        data = self.create_object()
+        response = test_client.patch(
+            f"{self.url}/{pytest.test_team_id}",
+            headers={"Authorization": f"Bearer {pytest.test_token}"}, json=data)
+        assert response.status_code == 200
+
+    @pytest.mark.asyncio
+    async def test_delete(self, test_client):
         response = test_client.delete(
-            f"/api/auth/v1/team/{pytest.test_team_id}", headers={"Authorization": f"Bearer {pytest.test_token}"})
+            f"{self.url}/{pytest.test_team_id}", headers={"Authorization": f"Bearer {pytest.test_token}"})
+        await self.test_create(test_client=test_client)
         assert response.status_code == 200
-        delattr(pytest, "test_team_id")
+        # delattr(pytest, "test_team_id")

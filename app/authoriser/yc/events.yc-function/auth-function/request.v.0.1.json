@@ -1,0 +1,122 @@
+{
+  "awsRequestId": "87b9d5bd-53b0-480d-be7a-89d23fb71f25",
+  "requestId": "87b9d5bd-53b0-480d-be7a-89d23fb71f25",
+  "invokedFunctionArn": "d4errorpt5rrpqqdag17",
+  "functionName": "d4errorpt5rrpqqdag17",
+  "functionVersion": "d4e8g1uagh8augprgu5n",
+  "memoryLimitInMB": "128",
+  "deadlineMs": 1681989357701,
+  "logGroupName": "ckgdbsk5v76jgieqiv4v",
+  "token": {
+    "access_token": "t1.9euelZqajcaXy5jPnomLypOQx5GNkO3rnpWajpCZksyems2enZqUlZ2Qlpbl8_d2fXtd-e95UwRn_t3z9zYseV3573lTBGf-.ph9rdEzE4izaTylUnrrYTJtEtOgzuJnHDtDc4tmXoYrPJpjaZOMj2gAnJ-hyNPsnmTkA2GpOXrM0cRDO0GRWCw",
+    "expires_in": 34650,
+    "token_type": "Bearer"
+  },
+  "uberTraceId": "302227d181271ddb:236941b2c9900c31:4a8410b9b721d02e:1",
+  "_data": {
+    "httpMethod": "GET",
+    "headers": {
+      "Accept": "*/*",
+      "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQwMjMyMDMsInN1YiI6IntcInVzZXJfaWRcIjogXCI2ODAxM2MyOS02MDQ3LTQ1NTktYjJhYS1kMDdkZjJjMDAwOTZcIiwgXCJlbWFpbFwiOiBcInJ1c2xhbi5rb25vdmFsb3ZAa29kaXQuaW9cIiwgXCJyZWdpb25cIjogXCJmaW5sYW5kLCBzcGFpbiwgcG9sYW5kXCIsIFwicm9sZXNcIjoge1wiYmJmOGJiOTMtZjAwMS00ZDRlLWE5MWUtZjRiNTY0OWIzOWVjXCI6IFwiYWRtaW5cIn0sIFwidGVhbXNcIjogW10sIFwidmlzaWJpbGl0eV9ncm91cFwiOiBcInJvb3RcIn0iLCJ0eXBlIjoiYWNjZXNzIn0.ZTezpHrALaiFrxlAq_mTTajHgtH13LCXwwRy9g0e_lZHmfMLzoGynmrHxBzMAfUgiEObdngCX2IMNuJXEEGMwx0eGe5OIihBI82LC3rLJoLabRVHNK_VrOKyTGNbI7wtn5rZCTYhMKIwfikXn-ZGG07ldfrl45GJhNgS0Mr2bWXRez_WDLomxGqOMsEM5DKL0-PPGjd0MQsh4msCOEw7clSNcxqO8jaVJ48hXjksn9R94fYtUDl8BCv_sVW5Jl4_isklgytfJqCdr3q2q1u18iczkHlUdVRWd3GDcjvf1ADehOyPLISX7n9HCEEhk-XnR9rreP9dc839CuPv4MR-59jiq21s5dfDsUFaoGUjpQh-6rICasFZic-8pQg0m5zsKKTX1LhQ1qmPT1pn2w323IOLzsVSKbV9vZpAFmqsDHwmAsSXt16WUJJflmLVsveiWjinmGbDD-mACW40KGUWVCmVJWeVE39Fes6RtZJtf3dv4-pPUcjePOK9tJoWlyG2Z4JyF1M-EyQDhv0QBxklG9UBEQb1Yo3wKJTwoCBnB_5z0aRw5HWjQE7k_LgXK-3CZdZTZ2FwIfUOHPqzYYSBzgFnHvBUcZWmDcR4-ykbQk_Sv8N-TT8HzziAkzp26ogPCjQm6aNbzq7sAKpE2AAxbhJoIXYo8EGXnRlBrRmQ-Ng",
+      "Host": "d5d0j6jdjudd23q9skq3.apigw.yandexcloud.net",
+      "Uber-Trace-Id": "302227d181271ddb:3a0e20bda7ed5330:6e32e757ff53113e:1",
+      "User-Agent": "Custom User Agent String",
+      "X-Api-Gateway-Function-Id": "d4eo975nud6j5brder3j",
+      "X-Envoy-External-Address": "127.0.0.1",
+      "X-Envoy-Original-Path": "/path/method",
+      "X-Forwarded-For": "127.0.0.1",
+      "X-Forwarded-Proto": "https",
+      "X-Real-Remote-Address": "127.0.0.1:52557",
+      "X-Request-Id": "c4a46e3c-758e-4f6c-997c-2350bcf1a1e7",
+      "X-Serverless-Certificate-Ids": "{}",
+      "X-Serverless-Gateway-Id": "d5d0j6jdjudd23q9skq3",
+      "X-Trace-Id": "13546b66-b44f-4a45-898f-8ca6d2a2b83d"
+    },
+    "url": "/path/method?",
+    "params": {
+      "proxy": "method"
+    },
+    "multiValueParams": {
+      "proxy": [
+        "method"
+      ]
+    },
+    "pathParams": {
+      "proxy": "method"
+    },
+    "multiValueHeaders": {
+      "Accept": [
+        "*/*"
+      ],
+      "Authorization": [
+        "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQwMjMyMDMsInN1YiI6IntcInVzZXJfaWRcIjogXCI2ODAxM2MyOS02MDQ3LTQ1NTktYjJhYS1kMDdkZjJjMDAwOTZcIiwgXCJlbWFpbFwiOiBcInJ1c2xhbi5rb25vdmFsb3ZAa29kaXQuaW9cIiwgXCJyZWdpb25cIjogXCJmaW5sYW5kLCBzcGFpbiwgcG9sYW5kXCIsIFwicm9sZXNcIjoge1wiYmJmOGJiOTMtZjAwMS00ZDRlLWE5MWUtZjRiNTY0OWIzOWVjXCI6IFwiYWRtaW5cIn0sIFwidGVhbXNcIjogW10sIFwidmlzaWJpbGl0eV9ncm91cFwiOiBcInJvb3RcIn0iLCJ0eXBlIjoiYWNjZXNzIn0.ZTezpHrALaiFrxlAq_mTTajHgtH13LCXwwRy9g0e_lZHmfMLzoGynmrHxBzMAfUgiEObdngCX2IMNuJXEEGMwx0eGe5OIihBI82LC3rLJoLabRVHNK_VrOKyTGNbI7wtn5rZCTYhMKIwfikXn-ZGG07ldfrl45GJhNgS0Mr2bWXRez_WDLomxGqOMsEM5DKL0-PPGjd0MQsh4msCOEw7clSNcxqO8jaVJ48hXjksn9R94fYtUDl8BCv_sVW5Jl4_isklgytfJqCdr3q2q1u18iczkHlUdVRWd3GDcjvf1ADehOyPLISX7n9HCEEhk-XnR9rreP9dc839CuPv4MR-59jiq21s5dfDsUFaoGUjpQh-6rICasFZic-8pQg0m5zsKKTX1LhQ1qmPT1pn2w323IOLzsVSKbV9vZpAFmqsDHwmAsSXt16WUJJflmLVsveiWjinmGbDD-mACW40KGUWVCmVJWeVE39Fes6RtZJtf3dv4-pPUcjePOK9tJoWlyG2Z4JyF1M-EyQDhv0QBxklG9UBEQb1Yo3wKJTwoCBnB_5z0aRw5HWjQE7k_LgXK-3CZdZTZ2FwIfUOHPqzYYSBzgFnHvBUcZWmDcR4-ykbQk_Sv8N-TT8HzziAkzp26ogPCjQm6aNbzq7sAKpE2AAxbhJoIXYo8EGXnRlBrRmQ-Ng"
+      ],
+      "Host": [
+        "d5d0j6jdjudd23q9skq3.apigw.yandexcloud.net"
+      ],
+      "Uber-Trace-Id": [
+        "302227d181271ddb:3a0e20bda7ed5330:6e32e757ff53113e:1"
+      ],
+      "User-Agent": [
+        "Custom User Agent String"
+      ],
+      "X-Api-Gateway-Function-Id": [
+        "d4eo975nud6j5brder3j"
+      ],
+      "X-Envoy-External-Address": [
+        "127.0.0.1"
+      ],
+      "X-Envoy-Original-Path": [
+        "/path/method"
+      ],
+      "X-Forwarded-For": [
+        "127.0.0.1"
+      ],
+      "X-Forwarded-Proto": [
+        "https"
+      ],
+      "X-Real-Remote-Address": [
+        "127.0.0.1:52557"
+      ],
+      "X-Request-Id": [
+        "c4a46e3c-758e-4f6c-997c-2350bcf1a1e7"
+      ],
+      "X-Serverless-Certificate-Ids": [
+        "{}"
+      ],
+      "X-Serverless-Gateway-Id": [
+        "d5d0j6jdjudd23q9skq3"
+      ],
+      "X-Trace-Id": [
+        "13546b66-b44f-4a45-898f-8ca6d2a2b83d"
+      ]
+    },
+    "queryStringParameters": {},
+    "multiValueQueryStringParameters": {},
+    "requestContext": {
+      "identity": {
+        "sourceIp": "127.0.0.1",
+        "userAgent": "Custom User Agent String"
+      },
+      "httpMethod": "GET",
+      "requestId": "c4a46e3c-758e-4f6c-997c-2350bcf1a1e7",
+      "requestTime": "20/Apr/2023:11:15:53 +0000",
+      "requestTimeEpoch": 1681989353,
+      "authorizer": {
+        "stringKey": "value",
+        "numberKey": 1,
+        "booleanKey": true,
+        "arrayKey": [
+          "value1",
+          "value2"
+        ],
+        "mapKey": {
+          "value1": "value2"
+        }
+      }
+    },
+    "body": "",
+    "isBase64Encoded": true,
+    "path": "/path/{proxy+}"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "version": "2.0",
+  "type": "REQUEST",
+  "routeArn": "arn:aws:execute-api:us-east-1:123456789012:abcdef123/test/GET/request",
+  "identitySource": [
+    "user1"
+  ],
+  "routeKey": "$default",
+  "rawPath": "/my/path",
+  "rawQueryString": "parameter1=value1&parameter1=value2&parameter2=value",
+  "cookies": [
+    "cookie1",
+    "cookie2"
+  ],
+  "headers": {
+    "accept-encoding": "gzip",
+    "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQwMjMyMDMsInN1YiI6IntcInVzZXJfaWRcIjogXCI2ODAxM2MyOS02MDQ3LTQ1NTktYjJhYS1kMDdkZjJjMDAwOTZcIiwgXCJlbWFpbFwiOiBcInJ1c2xhbi5rb25vdmFsb3ZAa29kaXQuaW9cIiwgXCJyZWdpb25cIjogXCJmaW5sYW5kLCBzcGFpbiwgcG9sYW5kXCIsIFwicm9sZXNcIjoge1wiYmJmOGJiOTMtZjAwMS00ZDRlLWE5MWUtZjRiNTY0OWIzOWVjXCI6IFwiYWRtaW5cIn0sIFwidGVhbXNcIjogW10sIFwidmlzaWJpbGl0eV9ncm91cFwiOiBcInJvb3RcIn0iLCJ0eXBlIjoiYWNjZXNzIn0.ZTezpHrALaiFrxlAq_mTTajHgtH13LCXwwRy9g0e_lZHmfMLzoGynmrHxBzMAfUgiEObdngCX2IMNuJXEEGMwx0eGe5OIihBI82LC3rLJoLabRVHNK_VrOKyTGNbI7wtn5rZCTYhMKIwfikXn-ZGG07ldfrl45GJhNgS0Mr2bWXRez_WDLomxGqOMsEM5DKL0-PPGjd0MQsh4msCOEw7clSNcxqO8jaVJ48hXjksn9R94fYtUDl8BCv_sVW5Jl4_isklgytfJqCdr3q2q1u18iczkHlUdVRWd3GDcjvf1ADehOyPLISX7n9HCEEhk-XnR9rreP9dc839CuPv4MR-59jiq21s5dfDsUFaoGUjpQh-6rICasFZic-8pQg0m5zsKKTX1LhQ1qmPT1pn2w323IOLzsVSKbV9vZpAFmqsDHwmAsSXt16WUJJflmLVsveiWjinmGbDD-mACW40KGUWVCmVJWeVE39Fes6RtZJtf3dv4-pPUcjePOK9tJoWlyG2Z4JyF1M-EyQDhv0QBxklG9UBEQb1Yo3wKJTwoCBnB_5z0aRw5HWjQE7k_LgXK-3CZdZTZ2FwIfUOHPqzYYSBzgFnHvBUcZWmDcR4-ykbQk_Sv8N-TT8HzziAkzp26ogPCjQm6aNbzq7sAKpE2AAxbhJoIXYo8EGXnRlBrRmQ-Ng",
+    "cache-control": "no-cache",
+    "content-length": "0",
+    "host": "hbh63ayyfb.execute-api.eu-central-1.amazonaws.com",
+    "postman-token": "d78b2862-ba46-4d09-bc1f-845dbb5a4816",
+    "user-agent": "Amazon CloudFront",
+    "via": "1.1 b71ecd1018f21aabbfe290f634d31212.cloudfront.net (CloudFront)",
+    "x-amz-cf-id": "syhGphq11d5h0Xs9EXY50rR68WZKCA0tXynh4n8wycAUFmoPMe7F7g==",
+    "x-amzn-trace-id": "Root=1-63c6c9e5-6eb40e6250a1839c037a9940",
+    "x-forwarded-for": "188.132.162.86, 52.46.56.71",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https"
+  },
+  "queryStringParameters": {
+    "parameter1": "value1,value2",
+    "parameter2": "value"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "api-id",
+    "authentication": {
+      "clientCert": {
+        "clientCertPem": "CERT_CONTENT",
+        "subjectDN": "www.example.com",
+        "issuerDN": "Example issuer",
+        "serialNumber": "a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1",
+        "validity": {
+          "notBefore": "May 28 12:30:02 2019 GMT",
+          "notAfter": "Aug  5 09:36:04 2021 GMT"
+        }
+      }
+    },
+    "domainName": "id.execute-api.us-east-1.amazonaws.com",
+    "domainPrefix": "id",
+    "http": {
+      "method": "POST",
+      "path": "/my/path",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "IP",
+      "userAgent": "agent"
+    },
+    "requestId": "idrtybner6y456y",
+    "routeKey": "$default",
+    "stage": "$default",
+    "time": "12/Mar/2020:19:03:58 +0000",
+    "timeEpoch": 1583348638390
+  },
+  "pathParameters": {
+    "parameter1": "value1"
+  },
+  "stageVariables": {
+    "stageVariable1": "value1",
+    "stageVariable2": "value2"
+  }
+}

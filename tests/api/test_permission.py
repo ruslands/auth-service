@@ -1,40 +1,63 @@
 import json
 import pytest
+from tests.api.test_role import Test as TestRole
+from tests.api.test_resource import Test as TestResource
 
 
-@pytest.mark.usefixtures("test_client", "test_basic", "test_create_role", "test_create_resource")
-class TestPermission:
+@pytest.mark.usefixtures("test_client")
+class Test:
+    url = "api/auth/v1/permission"
+    role = TestRole()
+    resource = TestResource()
 
-    def test_create_permission(self, test_client):
-        response = test_client.post("/api/auth/v1/permission",
-                                    headers={"Authorization": f"Bearer {pytest.test_token}"},
-                                    data=json.dumps({
-                                        "resource_id": pytest.test_resource_id,
-                                        "role_id": pytest.test_role_id,
-                                        "name": "test",
-                                        "description": "get all test"
-                                    }))
+    @pytest.mark.asyncio
+    async def test_create(self, test_client):
+        await self.role.test_create(test_client=test_client)
+        await self.resource.test_create(test_client=test_client)
+        response = test_client.post(
+            self.url,
+            headers={"Authorization": f"Bearer {pytest.test_token}"},
+            data=json.dumps(
+                {
+                    "resource_id": pytest.test_resource_id,
+                    "role_id": pytest.test_role_id,
+                    "title": "test",
+                    "description": "get all test",
+                }
+            ),
+        )
         assert response.status_code == 200
-        pytest.test_permission_id = response.json()["data"]["id"]
+        pytest.test_id = response.json()["data"]["id"]
 
-    def test_get_permissions_list(self, test_client):
-        response = test_client.get("/api/auth/v1/permission/list?page=1&size=100",
-                                   headers={"Authorization": f"Bearer {pytest.test_token}"})
+    @pytest.mark.asyncio
+    async def test_get_list(self, test_client):
+        response = test_client.get(
+            f"{self.url}/list?page=1&size=100",
+            headers={"Authorization": f"Bearer {pytest.test_token}"},
+        )
         assert response.status_code == 200
 
-    def test_get_permission_by_id(self, test_client):
-        response = test_client.get(f"/api/auth/v1/permission/{pytest.test_permission_id}", headers={
-                                   "Authorization": f"Bearer {pytest.test_token}"})
+    @pytest.mark.asyncio
+    async def test_get(self, test_client):
+        response = test_client.get(
+            f"{self.url}/{pytest.test_id}",
+            headers={"Authorization": f"Bearer {pytest.test_token}"},
+        )
         assert response.status_code == 200
 
-    def test_update_permission(self, test_client):
-        response = test_client.patch(f"/api/auth/v1/permission/{pytest.test_permission_id}", 
-        headers={"Authorization": f"Bearer {pytest.test_token}"},
-        data=json.dumps({"name": "test_test"}))
+    @pytest.mark.asyncio
+    async def test_update(self, test_client):
+        response = test_client.patch(
+            f"{self.url}/{pytest.test_id}",
+            headers={"Authorization": f"Bearer {pytest.test_token}"},
+            data=json.dumps({"title": "test_test"}),
+        )
         assert response.status_code == 200
 
     def test_delete_permission(self, test_client):
-        response = test_client.delete(f"/api/auth/v1/permission/{pytest.test_permission_id}", headers={
-                                      "Authorization": f"Bearer {pytest.test_token}"})
+        response = test_client.delete(
+            f"{self.url}/{pytest.test_id}",
+            headers={"Authorization": f"Bearer {pytest.test_token}"},
+        )
         assert response.status_code == 200
-        delattr(pytest, "test_permission_id")
+        # delattr(pytest, "test_id")

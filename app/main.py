@@ -6,27 +6,33 @@ import asyncio
 
 # # Installed # #
 from mangum import Mangum
-from sqladmin import Admin  # noqa
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 
 # # Package # #
-from app.utils.rbac import RBAC
-from app.utils.visibility_group import VisibilityGroup
-from app.database.admin import UserAdmin, RoleAdmin, SessionsAdmin, TeamAdmin, ResourceAdmin, VisibilityGroupAdmin  # noqa
-from app.database.database import async_engine, init_database
-from app.api.v1.api import router
-from app.utils.settings import settings
-from app.utils.logger import logger
-from app.utils.sentry import sentry_init
-from app.utils.middleware import UserMiddleware
+from app.rbac.util import RBAC
+from app.visibility_group.util import VisibilityGroup
+from app.admin import init_admin
+from core.database.database import init_database # noqa
+from api.v1.api import router
+from core.settings import settings
+from core.logger import logger
+from core.sentry import sentry_init
+from core.middleware import UserMiddleware
 
 sentry_init()
 
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url="/auth/openapi.json",
-    docs_url="/auth/docs", redoc_url="/auth/redoc"
+    title=settings.PROJECT_NAME,
+    description='auth service',
+    version='1.0.0',
+    openapi_url="/auth/openapi.json",
+    openapi_tags=[{
+        'name': 'auth',
+        'description': 'authentication and authorisation',
+    }],
+    docs_url="/auth/docs",
+    redoc_url="/auth/redoc"
 )
 
 app.include_router(router)
@@ -34,44 +40,31 @@ app.include_router(router)
 app.rbac = RBAC()  # store role based access control settings in the app context
 app.visibility_group = VisibilityGroup()  # store visibility groups settings in the app context
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # remove this in production
-    allow_methods=["*"], # remove this in production
-    allow_headers=["*"], # remove this in production
-)
 app.add_middleware(UserMiddleware)
 
-lambda_handler = None
-
-
-async def init_admin():
-    admin = Admin(app, async_engine, base_url='/auth/admin')
-    models = [UserAdmin, RoleAdmin, SessionsAdmin,
-              TeamAdmin, ResourceAdmin, VisibilityGroupAdmin]
-
-    for model in models:
-        admin.register_model(model)
+handler = None
 
 
 async def on_startup():
-    await asyncio.gather(init_database(), init_admin())
-# await asyncio.gather(init_admin())
+    await asyncio.gather(
+        init_database(),
+        init_admin(app)
+        )
 
 
 def wrapper(event, context):
     logger.debug(f"event: {event}")
-    results = lambda_handler(event, context)
+    results = handler(event, context)
     logger.debug(f"results: {results}")
     return results
 
 
 if os.getenv("AWS_LAMBDA_RUNTIME_API"):
     # mangum emits "startup" event on each request, therefore make it init only once
-    logger.debug("Running on AWS Lambda")
-    # app.on_event("startup")(on_startup)
-    lambda_handler = Mangum(app, lifespan="on", api_gateway_base_path=app.root_path)
-    # logger.add(lambda_handler, enqueue=False)
+    logger.debug("Running on Serverless")
+    app.on_event("startup")(on_startup)
+    handler = Mangum(app, lifespan="on", api_gateway_base_path=app.root_path)
+    # logger.add(handler, enqueue=False)
 else:
     app.on_event("startup")(on_startup)
     ...

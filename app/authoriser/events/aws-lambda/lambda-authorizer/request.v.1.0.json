@@ -1,0 +1,52 @@
+{
+    "version": "1.0",
+    "type": "REQUEST",
+    "methodArn": "arn:aws:execute-api:us-east-1:123456789012:abcdef123/test/GET/request",
+    "identitySource": "user1,123",
+    "authorizationToken": "user1,123",
+    "resource": "/request",
+    "path": "/request",
+    "httpMethod": "GET",
+    "headers": {
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MzM5NjEyNjIsInN1YiI6IntcInVzZXJfaWRcIjogXCI2ODAxM2MyOS02MDQ3LTQ1NTktYjJhYS1kMDdkZjJjMDAwOTZcIiwgXCJlbWFpbFwiOiBcInJ1c2xhbi5rb25vdmFsb3ZAa29kaXQuaW9cIiwgXCJyZWdpb25cIjogXCJmaW5sYW5kLCBzcGFpbiwgcG9sYW5kXCIsIFwicm9sZXNcIjoge1wiYmJmOGJiOTMtZjAwMS00ZDRlLWE5MWUtZjRiNTY0OWIzOWVjXCI6IFwiYWRtaW5cIn0sIFwidGVhbXNcIjogW10sIFwidmlzaWJpbGl0eV9ncm91cFwiOiBcInJvb3RcIn0iLCJ0eXBlIjoiYWNjZXNzIn0.IGM44dxizd2fZlTq8GL_fFSE3EYLEe-jSE0gRmNBdzNO47xBvyV7Akbm4hs1V8KyalKvRtxth0AjrfCBmfoZNnYXMoGvzeSwtaySZd9etrAaR6vizBpSxAt0lQLsr3ZtX-S44GszqXmKFveLlGMhMHPN5rIkKtLLmP2bYsDZ_ri26BgxWXZPxpRS6FNkQeuvRbiZH0nwkCMUPS07aPN-AteqV1GtzEGn1nmO_j0c3_Ofw4HqZUuGgr0HVWSD0PpzkSD_HoJGDTsjE72K0MzNT6A268mqzWRVa_mhiKgq4priVA2TEkDgFSLICsIUdy7Oghsbcsc7x_q-b0amZof5e0ZYpOZnrspVFnpYYtxLITk_QURaImS5_FwQvJJo-YnRl_G2tCzEG0yfWCq3Vs8H3njqvqSGg8VgcXHYbGP8Mq8Z7hx0XG0LXOK0_-cMe93tUeQH-nN55o3REqwlMR8RjegCh1tCbbVPCbIffMVCNhRDHcw_UvIq16_dOrHg46FLz7EQmxlhZ4StkD_Ke0PA2bHi1FW-iUlErxb1SHkTilCI7jxN43WGcvV9OFBgDc_uiknDL7vhwqfj1TQmxwmm1R5KksjK51m2TsR573wC4L49sgb_7ECJwv1yea6NtJ3dUPYsidyd591wKOtL8d61dsJwEMyx_aJpCywEHRUj_fw",
+      "X-AMZ-Date": "20170718T062915Z",
+      "Accept": "*/*",
+      "HeaderAuth1": "headerValue1",
+      "CloudFront-Viewer-Country": "US",
+      "CloudFront-Forwarded-Proto": "https",
+      "CloudFront-Is-Tablet-Viewer": "false",
+      "CloudFront-Is-Mobile-Viewer": "false",
+      "User-Agent": "..."
+    },
+    "queryStringParameters": {
+      "QueryString1": "queryValue1"
+    },
+    "pathParameters": {},
+    "stageVariables": {
+      "StageVar1": "stageValue1"
+    },
+    "requestContext": {
+      "path": "/request",
+      "accountId": "123456789012",
+      "resourceId": "05c7jb",
+      "stage": "test",
+      "requestId": "...",
+      "identity": {
+        "apiKey": "...",
+        "sourceIp": "...",
+        "clientCert": {
+          "clientCertPem": "CERT_CONTENT",
+          "subjectDN": "www.example.com",
+          "issuerDN": "Example issuer",
+          "serialNumber": "a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1",
+          "validity": {
+            "notBefore": "May 28 12:30:02 2019 GMT",
+            "notAfter": "Aug  5 09:36:04 2021 GMT"
+          }
+        }
+      },
+      "resourcePath": "/request",
+      "httpMethod": "GET",
+      "apiId": "abcdef123"
+    }
+  }

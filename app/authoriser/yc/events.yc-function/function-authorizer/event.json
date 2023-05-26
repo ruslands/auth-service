@@ -1,0 +1,37 @@
+{
+  "resource": "/path/{proxy+}",
+  "path": "/path/method",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MzMzMzg3MDYsInN1YiI6IntcInVzZXJfaWRcIjogXCI2ODAxM2MyOS02MDQ3LTQ1NTktYjJhYS1kMDdkZjJjMDAwOTZcIiwgXCJlbWFpbFwiOiBcInJ1c2xhbi5rb25vdmFsb3ZAa29kaXQuaW9cIiwgXCJyZWdpb25cIjogXCJmaW5sYW5kLCBzcGFpbiwgcG9sYW5kXCIsIFwicm9sZXNcIjoge1wiYmJmOGJiOTMtZjAwMS00ZDRlLWE5MWUtZjRiNTY0OWIzOWVjXCI6IFwiYWRtaW5cIn0sIFwidGVhbXNcIjogW10sIFwidmlzaWJpbGl0eV9ncm91cFwiOiBcInJvb3RcIn0iLCJ0eXBlIjoiYWNjZXNzIn0.N4chZLVz1v2F3rx_r-rfNOQf0nlY1Hm5kOhnvfnT7tWZ5l7K5dyhxv9O3OVskzf-eKIHLDkINV4iqt5h8qvF0TGqHVy3OQzgGPReBtYonB4IhRk6xsD2_zdJgo4XOp-xXLWct4JE0dzMHZBLE37-Yw5uK70r0745ppPNdSrmpDCiPjGYwBb_aZGoBbU4vzZ5sqJTkz9v63tZ9J13lzVtloBnCXdGNcaNiZpGJXropKbSqLCcNyjER5hBJRhbBqJVrEtNHwbtMCDRgMgsAPlT9zDpkGDls5_llVYV_hEdAxDqI2RtE5X9H71BK-xcBQPVANpRlpCev1z_UnvlxEKr5qj6xjHasGezkPdDNxIDdJ7SnBLpnAuxSCQohomf6Wow8G9d8dJkKLuZjoKj1j5r7MWSeTHv-zLKDiGt3QoYo8HDKgvoQbRaM9ONFIxozR-1U0Kw2ikKI5TqIudtrPCOHkO7m6ppiLRYlf-KnrDrpq-O7doeqlfmQeJoWzDPY6iAY69pmr15dtKVflZOVrwuQD8yVkEM6ywlhyojkbge6KqBbQYUBKHVOc59WWjk24mbAiYoOTD1D371YroGDTvCH8FhC1fX4YyA_nYnU-iq1OTAYKLjpWTWmdrqmtRqAfZPLjLFl8rfQWN_bf91cjjjOApmXA_ZOiR93sB0vEjjJwo",
+    "Host": "d5d0j6jdjudd23q9skq3.apigw.yandexcloud.net",
+    "Uber-Trace-Id": "506b6d650c1a9596:e4f9ce4d7a352602:661fe57fcf666c9d:1",
+    "User-Agent": "Custom User Agent String",
+    "X-Api-Gateway-Function-Id": "d4eo975nud6j5brder3j",
+    "X-Envoy-External-Address": "127.0.0.1",
+    "X-Envoy-Original-Path": "/path/method",
+    "X-Forwarded-For": "127.0.0.1",
+    "X-Forwarded-Proto": "https",
+    "X-Real-Remote-Address": "127.0.0.1:55691",
+    "X-Request-Id": "0e9540ba-536e-4e29-bddb-4331515a5594",
+    "X-Serverless-Certificate-Ids": "{}",
+    "X-Serverless-Gateway-Id": "d5d0j6jdjudd23q9skq3",
+    "X-Trace-Id": "751e4f67-f76a-4002-92f1-7eb7d341d155"
+  },
+  "queryStringParameters": {},
+  "pathParameters": {
+    "proxy": "method"
+  },
+  "requestContext": {
+    "identity": {
+      "sourceIp": "127.0.0.1",
+      "userAgent": "Custom User Agent String"
+    },
+    "httpMethod": "GET",
+    "requestId": "0e9540ba-536e-4e29-bddb-4331515a5594",
+    "requestTime": "21/Apr/2023:10:52:00 +0000",
+    "requestTimeEpoch": 1682074320
+  },
+  "cookies": {}
+}

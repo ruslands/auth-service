@@ -1,8 +1,13 @@
+Dockerfile
 __pycache__
+*cache
+cache*
 *.pyc
 .git
 .gitignore
 .idea
 .vscode
 .gitlab-ci.yml
+.notes
+/tmp*
 *.md

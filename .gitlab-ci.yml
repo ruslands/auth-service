@@ -1,0 +1,4 @@
+include:
+  - project: app/devops
+    file:
+      - .gitlab/pipelines/function.yml
