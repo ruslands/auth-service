@@ -14,31 +14,13 @@ from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
 from app.model import User
-<<<<<<< HEAD
-from app.role.schema import ICreate, IRead, IUpdate, IRead
-=======
 from app.role.schema import ICreate, IRead, IUpdate, IFilter
->>>>>>> master
 from core.base.schema import (
     IGetResponseBase,
     IPostResponseBase,
     IPutResponseBase,
     IDeleteResponseBase
 )
-<<<<<<< HEAD
-
-router = APIRouter()
-
-
-@router.get("/role/list", response_model=IGetResponseBase[Page[IRead]])
-async def list(
-    params: Params = Depends(),
-    db_session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user()),
-):
-    roles = await crud.role.get_multi_paginated(db_session, params=params)
-    return IGetResponseBase[Page[IRead]](data=roles)
-=======
 from core.utils import ColumnAnnotation, ApiListUtils
 
 router = APIRouter()
@@ -66,7 +48,6 @@ async def list(
     }
     roles = await crud.role.get_multi_paginated(db_session, params=params, filters=filters, scope=scope)
     return IGetResponseBase[Page[IRead]](data=roles, meta=meta)
->>>>>>> master
 
 
 @router.get("/role/{role_id}", response_model=IGetResponseBase[IRead])

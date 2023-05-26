@@ -24,10 +24,7 @@ class IRead(PermissionBase, BaseUUIDModel):
 
 class IUpdate(PermissionBase):
     ...
-<<<<<<< HEAD
-=======
 
 
 class IFilter(PermissionBase):
     ...
->>>>>>> master

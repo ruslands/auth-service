@@ -12,11 +12,7 @@ from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
 from app.model import User
-<<<<<<< HEAD
-from app.permission.schema import ICreate, IRead, IUpdate
-=======
 from app.permission.schema import ICreate, IRead, IUpdate, IFilter
->>>>>>> master
 from core.base.schema import (
     IGetResponseBase,
     IPostResponseBase,
@@ -29,11 +25,7 @@ router = APIRouter()
 
 utils = ApiListUtils(IFilter, IRead)
 
-<<<<<<< HEAD
-@router.get("/permission/list", response_model=IGetResponseBase[Page[IRead]])
-=======
 @router.get("/permission/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
@@ -54,11 +46,7 @@ async def list(
         ]
     }
     permissions = await crud.permission.get_multi_paginated(db_session, params=params)
-<<<<<<< HEAD
-    return IGetResponseBase[Page[IRead]](data=permissions)
-=======
     return IGetResponseBase[Page[IRead]](data=permissions, meta=meta)
->>>>>>> master
 
 
 @router.get("/permission/{permission_id}", response_model=IGetResponseBase[IRead])

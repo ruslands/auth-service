@@ -11,25 +11,16 @@ from fastapi import APIRouter, Depends
 
 # # Package # #
 from core.settings import Params, Page
-<<<<<<< HEAD
-from core.logger import logger
-from core.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
-from app.user.schema import ICreate, IRead, IUpdate, IReadTemporary, IUserFilter
-=======
 from core.utils import ColumnAnnotation, ApiListUtils
 from core.logger import logger
 from core.exceptions import AlreadyExistsException, NotFoundException, BadRequestException
 from app.user.schema import ICreate, IRead, IUpdate, IFilter
->>>>>>> master
 from app.user.util import get_current_user
 from core.database.session import get_session
 from app import crud
 from app.model import User
-<<<<<<< HEAD
-=======
 from app.role.model import Role
 from app.role.schema import IFilter as RoleFilter
->>>>>>> master
 from core.base.schema import (
     IDeleteResponseBase,
     IGetResponseBase,
@@ -39,32 +30,6 @@ from core.base.schema import (
 
 router = APIRouter()
 
-<<<<<<< HEAD
-
-async def user_filters(filters: Union[str, None] = None) -> Dict[str, Any]:
-    try:
-        return IUserFilter.parse_obj(json.loads(filters)).dict(exclude_none=True) if filters is not None else {}
-    except json.JSONDecodeError:
-        raise BadRequestException(detail="Invalid filters")
-
-
-async def user_scope(scope: Union[str, None] = None) -> List[str]:
-    possible_values = list(IReadTemporary.schema()['properties'].keys())
-    try:
-        if scope is None:
-            return {}
-        scope = scope.split(".")
-        if not set(scope).issubset(set(possible_values)):
-            raise Exception
-        exclude = set(set(possible_values) - set(scope))
-        return exclude
-    except:
-        raise BadRequestException(
-            detail=f"Invalid scope. Possible values are: {possible_values}")
-
-
-@router.get("/user/list", response_model=IGetResponseBase[Page[IReadTemporary]])
-=======
 # Если связь many to many то необходимо указывать целевую таблицу и связь из начальной таблицы.
 mapping_filters = {
     "roles": {
@@ -76,29 +41,10 @@ mapping_filters = {
 utils = ApiListUtils(mapping=mapping_filters, ifilter=IFilter, iread=IRead)
 
 @router.get("/user/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
     # current_user: User = Depends(get_current_user()),
-<<<<<<< HEAD
-    filters: dict = Depends(user_filters),
-    exclude: set = Depends(user_scope)
-):
-    """
-    Retrieve users.
-    """
-    logger.info(f"filters = {filters}")
-    query = None  # TODO build a query in order to get the join data
-    if filters:
-        query = select(User)
-        for key, value in filters.items():
-            query = query.where(getattr(User, key) == value)
-    users = await crud.user.get_multi_paginated(db_session, params=params, query=query)
-    # TODO: fix this. create new class from factory
-    IReadTemporary.__exclude_fields_custom__ = exclude
-    return IGetResponseBase[Page[IReadTemporary]](data=users)
-=======
     filters: dict = Depends(utils.filters),
     scope: set = Depends(utils.scope)
 ):
@@ -120,7 +66,6 @@ async def list(
     }
     data = await crud.user.get_multi_paginated(db_session, params=params, filters=filters, scope=scope)
     return IGetResponseBase[Page[IRead]](data=data, meta=meta)
->>>>>>> master
 
 
 @router.get("/user/{user_id}", response_model=IGetResponseBase[IRead])
@@ -132,11 +77,7 @@ async def get(
     return IGetResponseBase[IRead](data=user)
 
 
-<<<<<<< HEAD
-@router.post("/user", response_model=IPostResponseBase[IReadTemporary])
-=======
 @router.post("/user", response_model=IPostResponseBase[IRead])
->>>>>>> master
 async def create(
     new_user: ICreate,
     db_session: AsyncSession = Depends(get_session),
@@ -148,17 +89,10 @@ async def create(
     # TODO assign default roles to user
     user = await crud.user.create(db_session, obj_in=new_user)
     # TODO send email to user with password
-<<<<<<< HEAD
-    return IPostResponseBase[IReadTemporary](data=user)
-
-
-@router.patch("/user/{user_id}", response_model=IPutResponseBase[IReadTemporary])
-=======
     return IPostResponseBase[IRead](data=user)
 
 
 @router.patch("/user/{user_id}", response_model=IPutResponseBase[IRead])
->>>>>>> master
 async def update(
     user_id: UUID,
     new_user: IUpdate,
@@ -171,11 +105,7 @@ async def update(
     user_updated = await crud.user.update(
         db_session=db_session, obj_current=user, obj_new=new_user
     )
-<<<<<<< HEAD
-    return IPutResponseBase[IReadTemporary](data=user_updated)
-=======
     return IPutResponseBase[IRead](data=user_updated)
->>>>>>> master
 
 
 @router.patch("/user/{user_id}/role/{role_id}", response_model=IPutResponseBase[IRead])
@@ -238,22 +168,14 @@ async def delete(
 
 
 @router.get("/user", response_model=IGetResponseBase[IRead])
-<<<<<<< HEAD
-async def get_my_data(
-=======
 async def get_me(
->>>>>>> master
     user: User = Depends(get_current_user()),
 ):
     return IGetResponseBase[IRead](data=user)
 
 
 @router.delete("/user", response_model=IGetResponseBase)
-<<<<<<< HEAD
-async def delete_my_data(
-=======
 async def delete_me(
->>>>>>> master
     db_session: AsyncSession = Depends(get_session),
     user: User = Depends(get_current_user()),
 ):

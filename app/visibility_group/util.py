@@ -3,11 +3,7 @@ from datetime import datetime
 from uuid import UUID
 
 # # Installed # #
-<<<<<<< HEAD
-import aiohttp
-=======
 import httpx
->>>>>>> master
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 # # Package # #
@@ -54,11 +50,7 @@ class VisibilityGroup:
         # logger.debug(f'Visibility group updated: {self.visibility}')
 
     async def get_from_api(self):
-<<<<<<< HEAD
-        async with aiohttp.ClientSession() as session:
-=======
         async with httpx.ClientSession() as session:
->>>>>>> master
             url = f"{settings.HOSTNAME}/api/vi/visibility_group/settings"
             async with session.get(url) as r:
                 r = await r.json()
@@ -73,13 +65,7 @@ class VisibilityGroup:
 
         response = {"users": []}
 
-<<<<<<< HEAD
-        payload = await verify_jwt_token(
-            token=access_token, type="access", db_session=db_session, crud=crud
-        )
-=======
         payload = await verify_jwt_token(token=access_token, token_type="access", db_session=db_session, crud=crud)
->>>>>>> master
         if payload["visibility_group"] is None:
             raise ConflictException(detail="User has no visibility_group")
 

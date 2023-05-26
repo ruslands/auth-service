@@ -16,28 +16,17 @@ from core.base.schema import (
     IPostResponseBase,
     IPutResponseBase,
 )
-<<<<<<< HEAD
-from app.team.schema import ICreate, IRead, IRead, IUpdate
-from app import crud
-from app.user.util import get_current_user
-from core.database.session import get_session
-=======
 from app.team.schema import ICreate, IRead, IFilter, IUpdate
 from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
 from core.utils import ColumnAnnotation, ApiListUtils
->>>>>>> master
 
 router = APIRouter()
 
 utils = ApiListUtils(IFilter, IRead)
 
-<<<<<<< HEAD
-@router.get("/team/list", response_model=IGetResponseBase[Page[IRead]])
-=======
 @router.get("/team/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
@@ -57,11 +46,7 @@ async def list(
         ]
     }
     teams = await crud.team.get_multi_paginated(db_session, params=params)
-<<<<<<< HEAD
-    return IGetResponseBase[Page[IRead]](data=teams)
-=======
     return IGetResponseBase[Page[IRead]](data=teams, meta=meta)
->>>>>>> master
 
 
 @router.get("/team/{team_id}", response_model=IGetResponseBase[IRead])

@@ -8,30 +8,19 @@ from fastapi import APIRouter, Depends
 # # Package # #
 from core.settings import Params, Page
 from core.exceptions import AlreadyExistsException, NotFoundException
-<<<<<<< HEAD
-=======
 from core.utils import ColumnAnnotation, ApiListUtils
->>>>>>> master
 from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
 from app.model import User
-<<<<<<< HEAD
-from app.resource.schema import ICreate, IRead, IUpdate
-=======
 from app.resource.schema import ICreate, IRead, IUpdate, IFilter
->>>>>>> master
 from core.base.schema import IGetResponseBase, IPostResponseBase, IPutResponseBase, IDeleteResponseBase
 
 router = APIRouter()
 
 utils = ApiListUtils(IFilter, IRead)
 
-<<<<<<< HEAD
-@router.get("/resource/list", response_model=IGetResponseBase[Page[IRead]])
-=======
 @router.get("/resource/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),

@@ -13,20 +13,13 @@ from core.settings import Params, Page, settings
 from core.exceptions import NotFoundException, AlreadyExistsException, BadRequestException
 from app.model import User
 from core.base.schema import IDeleteResponseBase, IGetResponseBase, IPostResponseBase, IPutResponseBase
-<<<<<<< HEAD
-from app.visibility_group.schema import *
-=======
 from app.visibility_group.schema import ICreate, IRead, IUpdate, IFilter, IVisibilityGroupValidateResponse
->>>>>>> master
 from app import crud
 from app.user.util import get_current_user
 from core.database.session import get_session
 from core.logger import logger
 from core.constants import VISIBILITY_GROUP_ENTITY_POSSIBLE_VALUES
-<<<<<<< HEAD
-=======
 from core.utils import ColumnAnnotation, ApiListUtils
->>>>>>> master
 
 router = APIRouter()
 
@@ -36,11 +29,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 utils = ApiListUtils(IFilter, IRead)
 
-<<<<<<< HEAD
-@router.get("/visibility_group/list", response_model=IGetResponseBase[Page[IRead]])
-=======
 @router.get("/visibility_group/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
@@ -65,11 +54,7 @@ async def list(
         ]
     }
     visibility_groups = await crud.visibility_group.get_multi_paginated(db_session, params=params)
-<<<<<<< HEAD
-    return IGetResponseBase[Page[IRead]](data=visibility_groups)
-=======
     return IGetResponseBase[Page[IRead]](data=visibility_groups, meta=meta)
->>>>>>> master
 
 
 # TODO: add response model
@@ -102,20 +87,12 @@ async def validate(
         access_token=access_token
     )
 
-<<<<<<< HEAD
-    meta = await verify_jwt_token(token=access_token, type="access", db_session=db_session, crud=crud)
-=======
     meta = await verify_jwt_token(token=access_token, token_type="access", db_session=db_session, crud=crud)
->>>>>>> master
 
     return IGetResponseBase[IVisibilityGroupValidateResponse](meta=meta, data=data)
 
 
-<<<<<<< HEAD
-@ router.get("/visibility_group/{visibility_group_id}", response_model=IGetResponseBase[IRead])
-=======
 @router.get("/visibility_group/{visibility_group_id}", response_model=IGetResponseBase[IRead])
->>>>>>> master
 async def get(
     visibility_group_id: UUID,
     db_session: AsyncSession = Depends(get_session),
@@ -127,11 +104,7 @@ async def get(
     return IGetResponseBase[IRead](data=visibility_group)
 
 
-<<<<<<< HEAD
-@ router.post("/visibility_group", response_model=IPostResponseBase[IRead])
-=======
 @router.post("/visibility_group", response_model=IPostResponseBase[IRead])
->>>>>>> master
 async def create(
     visibility_group: ICreate,
     db_session: AsyncSession = Depends(get_session),
@@ -143,11 +116,7 @@ async def create(
     return IPostResponseBase[IRead](data=visibility_group)
 
 
-<<<<<<< HEAD
-@ router.patch("/visibility_group/{visibility_group_id}", response_model=IPostResponseBase[IRead])
-=======
 @router.patch("/visibility_group/{visibility_group_id}", response_model=IPostResponseBase[IRead])
->>>>>>> master
 async def update(
     visibility_group_id: UUID,
     visibility_group: IUpdate,

@@ -8,16 +8,10 @@ from fastapi import APIRouter, Depends
 # # Package # #
 from core.settings import Params, Page
 from core.exceptions import NotFoundException
-<<<<<<< HEAD
-from app import crud
-from app.model import User
-from app.sessions.schema import IRead
-=======
 from core.utils import ColumnAnnotation, ApiListUtils
 from app import crud
 from app.model import User
 from app.sessions.schema import IRead, IFilter
->>>>>>> master
 from app.user.util import get_current_user
 from core.database.session import get_session
 from core.base.schema import IGetResponseBase, IDeleteResponseBase
@@ -27,11 +21,7 @@ router = APIRouter()
 
 utils = ApiListUtils(IFilter, IRead)
 
-<<<<<<< HEAD
-@router.get("/sessions/list", response_model=IGetResponseBase[Page[IRead]])
-=======
 @router.get("/sessions/list", response_model=IGetResponseBase[Page[IRead]], response_model_exclude_none=True)
->>>>>>> master
 async def read_sessions_list(
     params: Params = Depends(),
     db_session: AsyncSession = Depends(get_session),
