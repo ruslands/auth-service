@@ -44,12 +44,18 @@ class IIdentityProvider(BaseModel):
     idp_access_token: str
     idp_refresh_token: str
 
-    @validator("idp_access_token", "idp_refresh_token")
+    @validator("idp_access_token")
     def validate_empty(cls, value):
         if not value:
             raise ValueError("Field cannot be empty")
-
         return value
+    
+    @validator("idp_refresh_token")
+    def validate_refresh_token(cls, token, values):
+        if values.get("idp") != "facebook":
+            if not token:
+                raise ValueError("Field cannot be empty")
+        return token
 
 
 class ICreate(BaseModel):
