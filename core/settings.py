@@ -44,6 +44,8 @@ class SecretsSchema(BaseModel):
     APPLE_TEAM_ID: str
     APPLE_KEY_ID: str
     APPLE_PRIVATE_KEY: str
+    FACEBOOK_CLIENT_ID: str
+    FACEBOOK_CLIENT_SECRET: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     JWK: str
