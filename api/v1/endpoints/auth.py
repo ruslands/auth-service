@@ -10,6 +10,7 @@ from fastapi import APIRouter, Body, Depends, Request, Header, Response
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi_sso.sso.base import SSOBase
 from fastapi_sso.sso.google import GoogleSSO
+from fastapi_sso.sso.facebook import FacebookSSO
 from sqlmodel.ext.asyncio.session import AsyncSession
 from pydantic.networks import AnyHttpUrl
 
@@ -45,8 +46,16 @@ keycloak_sso = KeycloakSSO(
     use_state=False,
 )
 
-if google_sso.allow_insecure_http or keycloak_sso.allow_insecure_http:
+facebook_sso = FacebookSSO(
+    client_id=settings.FACEBOOK_CLIENT_ID,
+    client_secret=settings.FACEBOOK_CLIENT_SECRET,
+    allow_insecure_http=True,
+    use_state=False,
+)
+
+if any((google_sso.allow_insecure_http, keycloak_sso.allow_insecure_http, facebook_sso.allow_insecure_http)):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.HOSTNAME}/api/auth/access-token"
@@ -56,6 +65,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 class SSOProvider(str, Enum):
     keycloak = "keycloak"
     google = "google"
+    facebook = "facebook"
 
 
 def get_sso_provider(provider: SSOProvider) -> SSOBase:
@@ -64,6 +74,8 @@ def get_sso_provider(provider: SSOProvider) -> SSOBase:
             return google_sso
         case SSOProvider.keycloak:
             return keycloak_sso
+        case SSOProvider.facebook:
+            return facebook_sso
         case _:
             raise NotFoundException(detail="Provider not found")
 
