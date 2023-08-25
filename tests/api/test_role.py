@@ -1,15 +1,18 @@
-import json
-import pytest
-import string
 import random
+import string
+
+import pytest
+
+from app.role.model import Role
+from tests.api.base import TestCRUDBase
 
 
 @pytest.mark.usefixtures("test_client")
-class Test:
-    url = "api/auth/v1/role"
+class Test(TestCRUDBase[Role]):
+    _url = "api/auth/v1/role"
 
     @classmethod
-    def create_object(cls):
+    def create_object(cls) -> dict:
         return {
             "title": "".join(
                 random.choices(string.ascii_letters + string.digits, k=10)
@@ -22,44 +25,29 @@ class Test:
 
     @pytest.mark.asyncio
     async def test_create(self, test_client):
-        data = self.create_object()
-        response = test_client.post(
-            self.url,
-            json=data,
-            headers={"Authorization": f"Bearer {pytest.test_token}"},
-        )
-        assert response.status_code == 200
-        pytest.test_role_id = response.json()["data"]["id"]
+        response_data = self._base_test_create(test_client)
+        pytest.test_role_id = response_data["data"]["id"]
 
     @pytest.mark.asyncio
     async def test_get_list(self, test_client):
-        response = test_client.get(
-            f"{self.url}/list?page=1&size=100",
-            headers={"Authorization": f"Bearer {pytest.test_token}"},
-        )
-        assert response.status_code == 200
+        _ = self._base_test_get_list(test_client)
 
     @pytest.mark.asyncio
     async def test_get(self, test_client):
-        response = test_client.get(
-            f"{self.url}/{pytest.test_role_id}",
-            headers={"Authorization": f"Bearer {pytest.test_token}"},
-        )
-        assert response.status_code == 200
+        _ = self._base_test_get(test_client, pytest.test_role_id)
 
     @pytest.mark.asyncio
     async def test_update(self, test_client):
-        response = test_client.patch(
-            f"{self.url}/{pytest.test_role_id}",
-            headers={"Authorization": f"Bearer {pytest.test_token}"},
-            data=json.dumps({"title": "test_role_updated"}),
+        _ = self._base_test_update(
+            test_client,
+            pytest.test_role_id,
+            updated_data={
+                "title": "".join(
+                    random.choices(string.ascii_letters + string.digits, k=10)
+                ),
+            },
         )
-        assert response.status_code == 200
 
     @pytest.mark.asyncio
     async def test_delete(self, test_client):
-        response = test_client.delete(
-            f"{self.url}/{pytest.test_role_id}",
-            headers={"Authorization": f"Bearer {pytest.test_token}"},
-        )
-        assert response.status_code == 200
+        self._base_test_delete(test_client, pytest.test_role_id)
