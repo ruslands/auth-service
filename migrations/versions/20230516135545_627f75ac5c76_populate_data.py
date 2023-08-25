@@ -21,17 +21,17 @@ def upgrade() -> None:
     connection = op.get_bind()
 
     # Execute brand.sql
-    with open(f'../auth/data/role.sql', 'r') as f:
+    with open(f'./data/role.sql', 'r') as f:
         sql = f.read()
         connection.execute(sa.text(sql))
 
     # Execute account.sql
-    with open(f'../auth/data/user.sql', 'r') as f:
+    with open(f'./data/user.sql', 'r') as f:
         sql = f.read()
         connection.execute(sa.text(sql))
 
     # Execute attribute.sql
-    with open(f'../auth/data/link_role_user.sql', 'r') as f:
+    with open(f'./data/link_role_user.sql', 'r') as f:
         sql = f.read()
         connection.execute(sa.text(sql))
 
