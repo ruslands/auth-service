@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  aws-lambda:
+    build:
+      context: .
+      dockerfile: docker/aws-lambda/Dockerfile
+    container_name: aws-lambda-container
+
+
+  container:
+    build:
+      context: .
+      dockerfile: docker/container/Dockerfile
+    container_name: container-app
+    ports:
+      - "8000:8000"
+
+  yandex-container:
+    build:
+      context: .
+      dockerfile: docker/yandex-container/Dockerfile
+    container_name: yandex-container-app
+
+networks:
+  default:
