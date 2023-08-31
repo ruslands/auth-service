@@ -1,4 +1,4 @@
-FROM public.ecr.aws/sam/build-python3.9:1.70.0-20230113014543
+FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
