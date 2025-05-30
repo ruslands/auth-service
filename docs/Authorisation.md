@@ -1,3 +1,0 @@
-[Up](../README.md)
-
-# Authorisation

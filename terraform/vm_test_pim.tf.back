@@ -1,0 +1,30 @@
+resource "yandex_compute_instance" "vm-3" {
+  allow_stopping_for_update = true
+  name                      = "test-pim"
+  platform_id               = "standard-v3"
+  zone                      = "ru-central1-b"
+  resources {
+    cores         = "2"
+    memory        = "4"
+    core_fraction = "50"
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd8j0uq7qcvtb65fbffl"
+      size     = "100"
+      type     = "network-ssd"
+    }
+  }
+
+  network_interface {
+    subnet_id = "e2lpg52vf357d83h50p3"
+    nat       = true
+  }
+
+  metadata = {
+    user-data          = "${file("cloud-init_locadmin_ansible.yaml")}"
+    serial-port-enable = "1"
+  }
+  service_account_id = "aje16pj5e6797f7pm8fp"
+}

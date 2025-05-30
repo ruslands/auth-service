@@ -1,0 +1,29 @@
+resource "yandex_compute_instance" "vm-1" {
+  allow_stopping_for_update = true
+  name                      = "test-matrix"
+  platform_id               = "standard-v3"
+  zone                      = "ru-central1-b"
+  resources {
+    cores         = "4"
+    memory        = "4"
+    core_fraction = "50"
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd8i3uauimpm750kd9vh"
+      size     = "35"
+      type     = "network-ssd"
+    }
+  }
+
+  network_interface {
+    subnet_id = "e2lpg52vf357d83h50p3"
+    nat       = true
+  }
+
+  metadata = {
+    user-data          = "${file("cloud-init_mail.yaml")}"
+    serial-port-enable = "1"
+  }
+}

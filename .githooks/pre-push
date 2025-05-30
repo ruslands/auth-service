@@ -1,5 +1,0 @@
-#!/bin/sh
-set -e
-make lint
-make test
-# poetry run poe flake8

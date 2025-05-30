@@ -1,0 +1,17 @@
+#cloud-config
+users:
+  - name: locadmin
+    groups: sudo
+    shell: /bin/bash
+    sudo:
+      - ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ssh-ed25519 ECXlhBNftfR3 locadmin
+
+  - name: ansible
+    groups: sudo
+    shell: /bin/bash
+    sudo:
+      - ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ssh-rsa c2xwl5//yDLAsp/URiNukiqe++L3G+//+2C7UlKWkDkS4G4IC+/voup8yIssTMFkb9byfhFd4jPK5qRfLONhyOD9+14ADWsU88kkl66we1Gam9oviJPnqSPmCOoas0gYsiiIq0UViGEy6rQo91LK93PAK549js34ycJqbyHas2c=

@@ -7,9 +7,9 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry]
-name = ""
+name = "boilerplate"
 version = "0.1.0"
-description = ""
+description = "boileprplate service"
 authors = ["Ruslan Konovalov <konovalov.rus@gmail.com>"]
 
 

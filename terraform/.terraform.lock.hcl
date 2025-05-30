@@ -1,0 +1,44 @@
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/cyrilgdn/postgresql" {
+  version = "1.25.0"
+  hashes = [
+    "h1:MsqqXEZii7UcMTpux8pkdz5AnucCo4MifeeVVzp9IiU=",
+    "zh:0f9db6e1274603d642e96b58eaf6cc4223f7118f2d7ce909dc4812d332cc002a",
+    "zh:1819470f0304c6a60b2b51817cb43f6ff59a49e08cc9e50644b86b3a76c91601",
+    "zh:27bfb544983cac101a7c7c2e4cb9939a712dffcdd7ddcab83c2f8afc334e33c5",
+    "zh:46166f6f05771b0495df18459fdf3a63fae8b38e95a1b2754f03d006e17ea33d",
+    "zh:64d53afc52f26e8214990acc3e07f3b47bef628aa6b317595a8faec05b252209",
+    "zh:944d7ded418c022dd3ee513246677d601376fa38d76c9c4aecff2c2eefcaa35b",
+    "zh:9819551b61542a6d322d6a323bbb552ce02e769ce2222fd9bb1935473c7c4b3c",
+    "zh:c38bd73e208fe216efab48d099c85b8ad1e51ff102b3892443febc9778e7236e",
+    "zh:c73de133274dcc7a03e95f598550facc59315538f355e57e14b36e222b298826",
+    "zh:c7af02f5338bfe7f1976e01d3fcf82e05b3551893e732539a84c568d25571a84",
+    "zh:d1aa3d7432c7de883873f8f70e9a6207c7b536d874486d37aee0ca8c8853a890",
+    "zh:e17e9809fc7cc2d6f89078b8bfe6308930117b2270be8081820da40029b04828",
+    "zh:e1b21b7b7022e0d468d72f4534d226d57a7bfd8c96a4c7dc2c2fa0bb0b99298d",
+    "zh:f24b73645d8bc225f692bdf9c035411099ef57138569f45f3605ec79ac872e3b",
+  ]
+}
+
+provider "registry.terraform.io/yandex-cloud/yandex" {
+  version     = "0.96.1"
+  constraints = "0.96.1"
+  hashes = [
+    "h1:e2LA1ASVbzgvK3W8aH8Ex3D6lw9ochh/SkeQJN+VqF8=",
+    "zh:06541158300aac603a59e29c3ca25f94d914d3c2ca9907c6f4a8adf0803011a1",
+    "zh:0ee93870d989c75ec4eae4e8aa995f924d368bf8552ed815174b65332596079e",
+    "zh:1ea72b25fad597f974b523f9086b98f1a0747937cb777cd210b2802c24a31abf",
+    "zh:208c088ace3bd037dfc5bc6ef04a0ee1109fe42c56784da0ac8500124e6ad009",
+    "zh:7c55bcfe008eec28f7990e747e69e795208a33b1f7c912183bf3b71a41b6afe2",
+    "zh:91221ec94a01e4dbee6068ca035c740966f3de6faf326ad58b00c2d2b89d5028",
+    "zh:966ed944b173aac67d1066f0b3e710c3a66e90f1357743e2a77567c732a87b9b",
+    "zh:9b0f3d20645f9b7d4e86b11d506c7be22ae14a8ed53ecaacf69f9c5edef275e7",
+    "zh:9e9e8ce10a1e7e5316d227e123750044ee84f853526cc029dbfcadadcb865b09",
+    "zh:a71c74477a4b21ec573a9af489987332cd5e41cac2be49a277274aaa4b33973c",
+    "zh:bc4c7830b9281c76178f4eee1226b06aebe630cc8ae6c1d0831f994cff74708e",
+    "zh:eb1a18dc8e419fa1a5edea6dab91c04e1247d15b1967dc4d60e8448af5bd11e9",
+    "zh:fa2db9481d7e0c99efd08953bf14f0e6d7da71e0da1a30221c44db780d48be65",
+  ]
+}

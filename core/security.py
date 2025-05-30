@@ -1,19 +1,17 @@
-# # Native # #
 import json
 import random
 import string
 from datetime import datetime, timedelta
 
-
-# # Installed # #
 import jwt
 from passlib.context import CryptContext
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 
-# # Package # #
-from core.settings import settings
-from core.logger import logger
 from core.exceptions import UnauthorizedException
+from core.logger import logger
+from core.settings import settings
+
+
 # from app import crud
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -29,12 +27,11 @@ __all__ = (
 
 
 def create_cookie():
-    return pwd_context.hash(''.join(random.choice(string.ascii_letters) for i in range(150)))
+    return pwd_context.hash("".join(random.choice(string.ascii_letters) for i in range(150)))
 
 
 def create_jwt_token(subject: dict, expires_delta: timedelta, token_type: str) -> str:
-    # expire = datetime.utcnow() + expires_delta
-    expire = int((datetime.utcnow() + expires_delta).timestamp())
+    expire = int((datetime.now() + expires_delta).timestamp())
     to_encode = {"exp": expire, "sub": json.dumps(subject), "type": token_type}
     encoded_jwt = jwt.encode(to_encode, settings.PEM_PRIVATE_KEY, algorithm="RS256")
     return encoded_jwt, expire
@@ -42,16 +39,15 @@ def create_jwt_token(subject: dict, expires_delta: timedelta, token_type: str) -
 
 async def verify_jwt_token(token: str, token_type: str, db_session: AsyncSession, crud) -> dict:
     try:
-        payload = jwt.decode(token, settings.PEM_PUBLIC_KEY,
-                             algorithms=["RS256"], options={"verify_exp": True})
-        logger.info(f'jwt payload: {payload}')
-        if payload['type'] not in ["access", "refresh"]:
+        payload = jwt.decode(token, settings.PEM_PUBLIC_KEY, algorithms=["RS256"], options={"verify_exp": True})
+        logger.debug(f"jwt payload: {payload}")
+        if payload["type"] not in ["access", "refresh"]:
             raise UnauthorizedException(detail="Invalid token type")
-        payload = json.loads(payload['sub'])
+        payload = json.loads(payload["sub"])
         if token_type == "access":
             if not set(["user_id", "roles", "teams", "visibility_group"]).issubset(payload.keys()):
                 raise UnauthorizedException(detail="Invalid token payload")
-            if not isinstance(payload['roles'], dict):
+            if not isinstance(payload["roles"], dict):
                 raise UnauthorizedException(detail="Invalid token payload roles")
             if not await crud.sessions.get_by_access_token(db_session, access_token=token):
                 raise UnauthorizedException(detail="Access token not found")
@@ -79,7 +75,7 @@ async def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_password():
-    return ''.join(random.choice(string.ascii_letters) for i in range(15))
+    return "".join(random.choice(string.ascii_letters) for i in range(15))
 
 
 def get_password_hash(password: str) -> str:

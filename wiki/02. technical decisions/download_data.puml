@@ -1,0 +1,30 @@
+@startuml download_data_from_database
+!theme cerulean-outline
+ 
+participant "ui" as ui
+participant "api" as api
+database "airflow" as airflow
+database "postgres" as postgres
+database "s3" as s3
+ 
+autonumber
+autoactivate off
+ 
+skinparam style strictuml
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 250
+skinparam backgroundColor white
+skinparam DefaultFontName SansSerif
+ 
+title Download data from database
+
+ui -> api: /api/v1/entity/report
+api -> airflow: trigger report generate
+api -> ui: 200 OK
+airflow -> postgres: query data
+postgres -> airflow: return data
+airflow -> s3: save report in user bucket
+ui -> api: /api/v1/report/list get list of reports
+ui -> api: /api/v1/report/:id download report
+
+@enduml

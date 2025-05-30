@@ -1,17 +1,7 @@
-# # Native # #
-
-# # Installed # #
 from pydantic import BaseModel, Field
 
-# # Package # #
 
-
-__all__ = (
-    "BaseError",
-    "BaseIdentifiedError",
-    "NotFoundError",
-    "AlreadyExistsError"
-)
+__all__ = ("BaseError", "BaseIdentifiedError", "NotFoundError", "ConflictError")
 
 
 class BaseError(BaseModel):
@@ -25,9 +15,11 @@ class BaseIdentifiedError(BaseError):
 
 class NotFoundError(BaseIdentifiedError):
     """The entity does not exist"""
+
     pass
 
 
-class AlreadyExistsError(BaseIdentifiedError):
+class ConflictError(BaseIdentifiedError):
     """An entity being created already exists"""
+
     pass

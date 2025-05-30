@@ -1,4 +1,220 @@
-include:
-  - project: app/devops
-    file:
-      - .gitlab/pipelines/function.yml
+stages:
+  - init
+  - testing
+  - development
+  - staging
+  - production
+
+# Lint job
+Lint:
+  stage: init
+  image: cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage
+  script:
+    - make ruff.check
+    - make isort.check
+    - make black.check
+
+# Build Zip job
+Build Zip:
+  stage: init
+  image:
+    name: cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage
+    entrypoint: [""]
+  variables:
+    # These variables required for aws s3 cli in script section, not for the application
+    AWS_SECRET_ACCESS_KEY: $YANDEX_SECRET_ACCESS_KEY
+    AWS_ACCESS_KEY_ID: $YANDEX_ACCESS_KEY_ID
+    AWS_DEFAULT_REGION: ru-central1
+    AWS_S3_BUCKET_NAME: rtk-functions
+  before_script:
+    - python3 --version
+  script:
+    - apt-get update && apt-get install -y zip curl
+    - mkdir -p /tmp_archive
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.22.35.zip" -o "/tmp_archive/awscliv2-2.22.35.zip"
+    - unzip /tmp_archive/awscliv2-2.22.35.zip -d /tmp_archive
+    - /tmp_archive/aws/install
+    - |
+      if [ ! -f 'requirements.txt' ]; then
+        echo "File 'requirements.txt' does not exist. Generate it"
+        if [ -f 'poetry.lock' ] && [ -f 'pyproject.toml' ]; then
+          echo "Generate file 'requirements.txt' by Poetry"
+          pip3 install poetry==1.3.2
+          poetry export --without-hashes --format=requirements.txt > requirements.txt
+          echo -e "pyncclient==0.7\nPylibdmtx==0.1.10\npdf2image==1.17.0\nnested-multipart-parser==1.5.0" >> requirements.txt
+        else
+          echo "Failed to generate 'requirements.txt'" >&2
+          exit 1
+        fi
+      else
+        echo "File 'requirements.txt' already exists. Skip generation"
+      fi
+    - zip_filename="$CI_PROJECT_NAME-$(date '+%Y-%m-%d-%H-%M-%S').git$CI_COMMIT_SHORT_SHA.zip"
+    - zip -r $zip_filename . -x "*.git*"
+    - zip_sha256sum=$(sha256sum $zip_filename | cut -d' ' -f1)
+    - zip_s3_object="$CI_PROJECT_NAME/$zip_filename"
+    - aws s3 --endpoint=https://storage.yandexcloud.net
+      cp $zip_filename s3://$AWS_S3_BUCKET_NAME/$zip_s3_object
+    - |
+      {
+        echo "ZIP_S3_SHA256SUM=$zip_sha256sum"
+        echo "ZIP_S3_OBJECT=$zip_s3_object"
+      } | tee function_zip.env
+  artifacts:
+    paths:
+      - "${CI_PROJECT_NAME}-*.zip"
+    reports:
+      dotenv:
+        - function_zip.env
+
+# Test job
+Test:
+  stage: testing
+  image:
+    name: cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage
+  services:
+    - name: cr.yandex/crpipq7k37rtsmu4jig1/postgres-testdb:latest
+      command: ["-c", "shared_buffers=512MB", "-c", "max_connections=10"]
+      alias: postgres
+  environment:
+    name: testing
+  variables:
+    PG_SYSTEM_SHARED_BUFFERS: "512MB"
+  script:
+    - make migrate
+    - make test
+  allow_failure: true
+
+Update Docker Image for CI/CD:
+  stage: init
+  image:
+    name: docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - unset DOCKER_HOST
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+    - cd /builds/rtk/backend
+  script:
+    - echo -e "FROM python:3.11.0-slim\n
+      ENV PYTHONDONTWRITEBYTECODE=1\n
+      ENV PYTHONUNBUFFERED=1\n
+      RUN apt update\n
+      RUN apt install --yes --force-yes make\n
+      RUN pip install --upgrade pip\n
+      RUN pip install pyncclient==0.7 Pylibdmtx==0.1.10 pdf2image==1.17.0 nested-multipart-parser==1.5.0\n
+      RUN pip install poetry\n
+
+      COPY pyproject.toml poetry.lock ./\n
+
+      RUN poetry config virtualenvs.create false\n
+      RUN poetry install --no-root\n
+
+      CMD [ "python3" ]" > Dockerfile
+    - cat Dockerfile
+    - docker build --no-cache -t cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage .
+    - docker push cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage
+  when: manual
+
+# Base template for migrations
+.migration_template: &migration_template
+  image: cr.yandex/crpnj976gmfsvm5tku8r/python:gate-stage
+  when: manual
+  allow_failure: true
+  script:
+    - make migrate
+
+# Migration jobs
+Migration Development:
+  <<: *migration_template
+  stage: development
+  environment: development
+  before_script:
+    - apt update -y && apt install -y postgresql-client
+    - export PGPASSWORD=${DEV_PASS}
+    - psql -h "${DEV_HOST}" -U "${DEV_USER}" -d development -p 6432 -c 'DROP SCHEMA IF EXISTS core CASCADE; DROP SCHEMA IF EXISTS auth CASCADE; DROP SCHEMA IF EXISTS source CASCADE; DROP SCHEMA IF EXISTS analytics CASCADE; DROP SCHEMA IF EXISTS outbox CASCADE;'
+
+Migration Staging:
+  <<: *migration_template
+  stage: staging
+  environment: staging
+
+Migration Production:
+  <<: *migration_template
+  stage: production
+  environment: production
+
+# Base template for deployments
+.deploy_template: &deploy_template
+  trigger:
+    include:
+      - local: pipelines/terraform.yml
+    strategy: depend
+  variables:
+    ZIP_S3_SHA256SUM: $ZIP_S3_SHA256SUM
+    ZIP_S3_OBJECT: $ZIP_S3_OBJECT
+  when: manual
+  allow_failure: true
+
+Deploy Development:
+  stage: development
+  <<: *deploy_template
+  variables:
+    YC_FUNCTION_NAME: development-${CI_PROJECT_NAME}
+  when: manual
+  allow_failure: true
+
+Deploy Staging:
+  stage: staging
+  <<: *deploy_template
+  variables:
+    YC_FUNCTION_NAME: staging-${CI_PROJECT_NAME}
+
+Deploy Production:
+  stage: production
+  <<: *deploy_template
+  variables:
+    YC_FUNCTION_NAME: production-${CI_PROJECT_NAME}
+
+Update Airflow Staging:
+  stage: staging
+  image:
+    name: cr.yandex/crpnj976gmfsvm5tku8r/alpine:3.20.0
+  #  variables:
+  #    SSHKEY: $ANSIBLE_SSHKEY
+  before_script:
+    - apk update && apk add openssh && apk add rsync
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/known_hosts
+    #  - echo $ANSIBLE_SSHKEY > ~/.ssh/id_rsa  ## import ssh key
+    - cat $ANSIBLE_SSHKEY | tr -d '\r' > ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa 192.192.44.555 >> ~/.ssh/known_hosts
+    - chmod 600 -R ~/.ssh
+    - cd ~
+    #  - scp -r ${CI_PROJECT_DIR} ansible@192.168.34.236:/home/ansible/
+    - rsync -avP --exclude ${CI_PROJECT_DIR}/.git ${CI_PROJECT_DIR} ansible@192.192.44.555:/home/ansible/
+  script:
+    - ssh ansible@192.192.44.555 "cd ~ && sudo rsync -a backend/app backend/core backend/integration backend/jobs backend/.env /airflow/pim_staging/app/ && sudo rsync -a backend/dags/* /airflow/pim_staging/dags/ && sudo docker stop airflow_staging_pim_webserver && sudo docker start airflow_staging_pim_webserver && cd ~ && sudo rm -rf backend"
+  when: manual
+
+Update Airflow Production:
+  stage: production
+  image:
+    name: cr.yandex/crpnj976gmfsvm5tku8r/alpine:3.20.0
+  #  variables:
+  #    SSHKEY: $ANSIBLE_SSHKEY
+  before_script:
+    - apk update && apk add openssh && apk add rsync
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/known_hosts
+    #  - echo $ANSIBLE_SSHKEY > ~/.ssh/id_rsa  ## import ssh key
+    - cat $ANSIBLE_SSHKEY | tr -d '\r' > ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa 192.192.44.555 >> ~/.ssh/known_hosts
+    - chmod 600 -R ~/.ssh
+    - cd ~
+    #  - scp -r ${CI_PROJECT_DIR} ansible@192.168.34.236:/home/ansible/
+    - rsync -avP --exclude ${CI_PROJECT_DIR}/.git ${CI_PROJECT_DIR} ansible@192.192.44.555:/home/ansible/
+  script:
+    - ssh ansible@192.192.44.555 "cd ~ && sudo rsync -a backend/app backend/core backend/integration backend/jobs backend/.env /airflow/pim/app/ && sudo rsync -a backend/dags/* /airflow/pim/dags/ && sudo docker stop airflow_pim_webserver && sudo docker start airflow_pim_webserver && sudo docker stop airflow_analytics_webserver && sudo docker start airflow_analytics_webserver && cd ~ && sudo rm -rf backend"
+  when: manual

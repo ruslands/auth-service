@@ -1,0 +1,40 @@
+repos:
+  #   Sort imports
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (python)
+        language_version: python3.11
+
+  # Black python code formatter
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        language_version: python3.11
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.5.0
+    hooks:
+      # Run the linter.
+      - id: ruff
+
+  # Mypy type checker
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.2.0
+  #   hooks:
+  #     - id: mypy
+  #       language_version: python3.11
+  #       args: [--config-file, mypy.ini, --follow-imports=skip]
+
+  # - repo: local
+  #   hooks:
+  #     - id: run-tests
+  #       name: Run Tests
+  #       entry: pytest  # Replace with the test command of your choice
+  #       language: python
+  #       language_version: python3.11
+  #       types: [python]
+  #       args: ["-v"]  # Verbose output for the tests

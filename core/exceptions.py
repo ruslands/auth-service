@@ -1,98 +1,79 @@
-# # Installed # #
-from fastapi import HTTPException
-from fastapi import status as statuscode
-from fastapi.responses import JSONResponse
+from fastapi import HTTPException, status as statuscode
 
-# # Package # #
-from core.errors import BaseError, BaseIdentifiedError, NotFoundError, AlreadyExistsError
+from core.errors import BaseError, ConflictError, NotFoundError
 from core.logger import logger
 
 
 __all__ = (
     "BaseAPIException",
-    "BaseIdentifiedException",
     "UnauthorizedException",
     "ForbiddenException",
     "NotFoundException",
     "BadRequestException",
     "ConflictException",
-    "AlreadyExistsException",
+    "ValidationException",
 )
 
 
 class BaseAPIException(HTTPException):
     """Base error for custom API exceptions"""
+
     detail = "Generic error"
     status_code = statuscode.HTTP_500_INTERNAL_SERVER_ERROR
+    headers = {"X-UI-TOAST": "false"}
     model = BaseError
 
     def __init__(self, **kwargs):
-        kwargs.setdefault("detail", self.detail)
-        self.detail = kwargs["detail"]
-        self.data = self.model(**kwargs)
+        self.detail = kwargs.get("detail", self.detail)
         logger.error(f"Exception: {self.detail}")
-
-    def __str__(self):
-        return self.detail
-
-    def response(self):
-        return JSONResponse(
-            content=self.data.dict(),
-            status_code=self.status_code
-        )
-
-    @classmethod
-    def response_model(cls):
-        return {cls.status_code: {"model": cls.model}}
+        super().__init__(status_code=self.status_code, detail=self.detail, headers=self.headers)
 
 
-class BaseIdentifiedException(BaseAPIException):
-    """Base error for exceptions related with entities, uniquely identified"""
-    detail = "Entity error"
-    status_code = statuscode.HTTP_500_INTERNAL_SERVER_ERROR
-    model = BaseIdentifiedError
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    # def __init__(self, identifier, **kwargs):
-    #     super().__init__(identifier=identifier, **kwargs)
-
-
-class BadRequestException(BaseIdentifiedException):
+class BadRequestException(BaseAPIException):
     """Error raised when a user doing something wrong"""
+
     detail = "Bad request"
+    headers = {"X-UI-TOAST": "true"}
     status_code = statuscode.HTTP_400_BAD_REQUEST
 
 
-class UnauthorizedException(BaseIdentifiedException):
+class UnauthorizedException(BaseAPIException):
     """The exception for denied access request."""
+
     detail = "Unauthorized"
+    headers = {"X-UI-TOAST": "false"}
     status_code = statuscode.HTTP_401_UNAUTHORIZED
 
 
-class ForbiddenException(BaseIdentifiedException):
+class ForbiddenException(BaseAPIException):
     """The exception for denied access request."""
+
     detail = "Access denied"
+    headers = {"X-UI-TOAST": "true"}
     status_code = statuscode.HTTP_403_FORBIDDEN
 
 
-class NotFoundException(BaseIdentifiedException):
-    """Base error for exceptions raised because an entity does not exist"""
+class NotFoundException(BaseAPIException):
     detail = "The entity does not exist"
+    headers = {"X-UI-TOAST": "true"}
     status_code = statuscode.HTTP_404_NOT_FOUND
     model = NotFoundError
 
 
-class ConflictException(BaseIdentifiedException):
-    """Base error for exceptions raised because an entity already exists"""
+class ConflictException(BaseAPIException):
     detail = "The entity already exists"
+    headers = {"X-UI-TOAST": "true"}
     status_code = statuscode.HTTP_409_CONFLICT
-    model = AlreadyExistsError
+    model = ConflictError
 
 
-class AlreadyExistsException(BaseIdentifiedException):
-    """Base error for exceptions raised because an entity already exists"""
-    detail = "The entity already exists"
-    status_code = statuscode.HTTP_409_CONFLICT
-    model = AlreadyExistsError
+class ApplicationException(BaseAPIException):
+    detail = "Application error"
+    headers = {"X-UI-TOAST": "true"}
+    status_code = statuscode.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+class ValidationException(BaseAPIException):
+    detail = "Validation error"
+    headers = {"X-UI-TOAST": "true"}
+    status_code = statuscode.HTTP_422_UNPROCESSABLE_ENTITY
