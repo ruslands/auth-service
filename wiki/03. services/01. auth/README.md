@@ -59,31 +59,6 @@ Response:
 }
 ```
 
-By following this authentication flow, the system ensures that the user remains authenticated with minimal interruption, and tokens are securely handled.
-
-@startuml authentication
-!theme cerulean-outline
- 
-participant "backoffice" as backoffice
-participant "proxy" as proxy
-participant "auth" as auth
-participant "google-workspace-sdk" as workspace
-
- 
-autonumber
-autoactivate off
- 
-skinparam style strictuml
-skinparam responseMessageBelowArrow true
-skinparam maxMessageSize 250
-skinparam backgroundColor white
-skinparam DefaultFontName SansSerif
- 
-title Authentication
-
-backoffice -> proxy: auth/
-
-@enduml
 
 # Authorization
 
@@ -158,47 +133,14 @@ Authorization is the process of verifying a user's permissions to access specifi
 
 This ensures that users can only perform actions they are authorized to, and the system enforces security by verifying permissions for each API request.
 
-@startuml authorization
-!theme cerulean-outline
- 
-participant "backoffice" as backoffice
-participant "proxy" as proxy
-participant "service" as service
-participant "auth" as auth
-database "postgres" as postgres
-database "redis" as redis
- 
-autonumber
-autoactivate off
- 
-skinparam style strictuml
-skinparam responseMessageBelowArrow true
-skinparam maxMessageSize 250
-skinparam backgroundColor white
-skinparam DefaultFontName SansSerif
- 
-title Authentication
-
-backoffice -> proxy: /api/service
-proxy -> service: /api/service
-service -> service: init sensitive function
-service -> auth: check permission
-auth -> service: api call allowed
-service -> service: complete sensitive function
-service --> service: response
-
-@enduml
 
 # RBAC
 Role-Based Access Control (RBAC) is a method of regulating access to resources based on the roles assigned to users within an organization. In RBAC, permissions are assigned to specific roles, and users are granted roles, thereby acquiring the permissions associated with those roles. This approach simplifies management of user permissions and enhances security by ensuring that users can only perform actions that are appropriate for their role.
 
 
-
 # Session
 
-## User session
-
-The user session appears after passing authentication. Session data is stored in MongoDB and in Redis. 
+The user session appears after passing authentication. Session data is stored in Redis. 
 
 Session data:
 
@@ -212,9 +154,6 @@ Session data:
 * `name` - username, if known;
 * `phone` - the user's phone number.
 
-**IMPORTANT** `access_token`, `refresh_token`, `expires` the user receives only when
-[authentication](Authentication.md) or [session update](#session-update),
-the data of the `session` field can be obtained by the user at any time.
 
 ### Session update
 
@@ -239,6 +178,16 @@ Two options for logout
 2. Delete all sessions
 
 During deleting need to delete session from identity-provider
+
+# Visibility group
+
+Restricting access to data within one resource, users may have the same role granting access to the API, but different visibility groups returning different data.
+
+# Create
+
+1. Add a new column to the Visibility Group Table.
+2. Populate the column with settings as values.
+3. Update the schema.
 
 
 
@@ -279,22 +228,3 @@ To unlock users, the following methods are used:
 These actions require [special rights](Authorization.md#requests-requiring-authorization)
 
 
-# Visibility group
-
-Restricting access to data within one resource, users may have the same role granting access to the API, but different visibility groups returning different data.
-
-# Create
-
-1. Add a new column to the Visibility Group Table.
-2. Populate the column with settings as values.
-3. Update the schema.
-
-
-# Usage
-
-@dataclass
-class IAuthContext:
-    user: User = None
-    payload: dict = None
-    rbac: Optional[IRBAC | None] = None
-    visibility_group: Optional[list[UUID] | None] = None # if None then user has access to all entities if empty list then user has no access to any entity
